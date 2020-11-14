@@ -1,0 +1,10 @@
+﻿namespace CodeClinic.Domain.Enums
+{
+    public enum PriorityLevel
+    {
+        None,
+        Low,
+        Medium,
+        High
+    }
+}
