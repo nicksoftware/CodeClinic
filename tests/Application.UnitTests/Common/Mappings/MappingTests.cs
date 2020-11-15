@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using CodeClinic.Application.Common.Mappings;
-using CodeClinic.Application.TodoLists.Queries.GetTodos;
+using CodeClinic.Application.Issues.Queries.GetIssueList;
 using CodeClinic.Domain.Entities;
 using NUnit.Framework;
 using System;
@@ -29,8 +29,7 @@ namespace CodeClinic.Application.UnitTests.Common.Mappings
         }
         
         [Test]
-        [TestCase(typeof(TodoList), typeof(TodoListDto))]
-        [TestCase(typeof(TodoItem), typeof(TodoItemDto))]
+        [TestCase(typeof(Issue), typeof(IssueDto))]
         public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination)
         {
             var instance = Activator.CreateInstance(source);

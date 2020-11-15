@@ -1,10 +1,10 @@
-﻿using CodeClinic.Application.TodoLists.Queries.ExportTodos;
+﻿using CodeClinic.Application.Issues.Queries.GetIssueList;
 using System.Collections.Generic;
 
 namespace CodeClinic.Application.Common.Interfaces
 {
     public interface ICsvFileBuilder
     {
-        byte[] BuildTodoItemsFile(IEnumerable<TodoItemRecord> records);
+     
     }
 }

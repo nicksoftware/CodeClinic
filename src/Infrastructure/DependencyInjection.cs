@@ -1,5 +1,5 @@
 ﻿using CodeClinic.Application.Common.Interfaces;
-using CodeClinic.Infrastructure.Files;
+
 using CodeClinic.Infrastructure.Identity;
 using CodeClinic.Infrastructure.Persistence;
 using CodeClinic.Infrastructure.Services;
@@ -37,7 +37,7 @@ namespace CodeClinic.Infrastructure
 
             services.AddTransient<IDateTime, DateTimeService>();
             services.AddTransient<IIdentityService, IdentityService>();
-            services.AddTransient<ICsvFileBuilder, CsvFileBuilder>();
+           
 
             services.AddAuthentication()
                 .AddIdentityServerJwt();
