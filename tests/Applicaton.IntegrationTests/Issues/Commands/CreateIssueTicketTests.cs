@@ -12,7 +12,7 @@ namespace CodeClinic.Application.IntegrationTests.Issues.Commands
 {
     using static Testing;
 
-  public  class CreateIssueTests :TestBase
+  public  class CreateIssueTicketTests :TestBase
     {
         [Test]
         public void ShouldRequireMinimumFields()

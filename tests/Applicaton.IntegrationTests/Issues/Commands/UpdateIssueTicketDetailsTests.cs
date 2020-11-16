@@ -12,16 +12,17 @@ using System.Threading.Tasks;
 namespace CodeClinic.Application.IntegrationTests.Issues.Commands
 {
     using static Testing;
-    class UpdateIssueTests :TestBase
+    class UpdateIssueTicketDetailsTests :TestBase
     {
 
         [Test]
         public void UpdateIssueCommandCalled_ShouldRequireValidId()
         {
-            var command = new UpdateIssueTicketCommand
+            var command = new UpdateIssueTicketDetailsCommand
             {
                 Id = 99,
-                Title = "New Title"
+                Title = "This is my Issue",
+                 Body = "I cant do ssomething"
             };
 
             FluentActions
@@ -42,12 +43,11 @@ namespace CodeClinic.Application.IntegrationTests.Issues.Commands
                 Title = "New Issue"
             });
 
-            var command = new UpdateIssueTicketCommand
+            var command = new UpdateIssueTicketDetailsCommand
             {
                 Id = itemId,
                 Title = "Updated Issue",
-                Body = "This is the  updated Issue.",
-                Status = Domain.Enums.ProgressStatus.Answered,
+                Body = "This is the  updated Issue."
             };
 
             await SendAsync(command);

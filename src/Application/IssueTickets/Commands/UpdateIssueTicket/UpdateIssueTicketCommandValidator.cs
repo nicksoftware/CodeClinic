@@ -1,26 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Application.Issues.Commands.CreateIssue;
-using CodeClinic.Application.Common.Interfaces;
-using FluentValidation;
-using Microsoft.EntityFrameworkCore;
+﻿using FluentValidation;
 
-namespace CodeClinic.Application.Issues.Commands.CreateIssue
+namespace CodeClinic.Application.IssueTickets.Commands.UpdateIssueTicket
 {
-    class UpdateIssueTicketCommandValidator : AbstractValidator<CreateIssueTicketCommand>
+
+    public partial class UpdateIssueTicketCommandHandler
     {
- 
-        public UpdateIssueTicketCommandValidator()
+        public class UpdateIssueTicketCommandValidator : AbstractValidator<UpdateIssueTicketCommand>
         {
-            RuleFor(v => v.Title)
-                .MaximumLength(200)
-                .NotEmpty();
-            RuleFor(v => v.Title)
-         .NotEmpty().WithMessage("Title is required.")
-         .MaximumLength(200).WithMessage("Title must not exceed 200 characters.");
+            public UpdateIssueTicketCommandValidator()
+            {
+                RuleFor(s => s.Stars)
+                    .GreaterThanOrEqualTo(0).NotNull().NotEmpty()
+                    .WithMessage("Star Rating Cannot be less than Zero");
+
+                RuleFor(a => a.Status)
+                    .NotNull().NotEmpty()
+                    .WithMessage("Status cannot be null or empty");
+            }
         }
     }
 }

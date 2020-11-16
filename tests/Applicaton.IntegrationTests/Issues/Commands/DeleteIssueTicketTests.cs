@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace CodeClinic.Application.IntegrationTests.Issues.Commands
 {
     using static Testing;
-    public class DeleteIssueTests :TestBase
+    public class DeleteIssueTicketTests :TestBase
     {
 
         [Test]

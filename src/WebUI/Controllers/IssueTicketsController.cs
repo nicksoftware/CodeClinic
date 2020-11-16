@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CodeClinic.Application.IssueTickets.Commands.UpdateIssueTicket;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -30,6 +31,18 @@ namespace CodeClinic.WebUI.Controllers
 
         [HttpPut("{id}")]
         public async Task<ActionResult> Update(int id, UpdateIssueTicketCommand command)
+        {
+            if (id != command.Id)
+            {
+                return BadRequest();
+            }
+
+            await Mediator.Send(command);
+
+            return NoContent();
+        }
+        [HttpPut("[action]")]
+        public async Task<ActionResult> UpdateDetails(int id, UpdateIssueTicketDetailsCommand command)
         {
             if (id != command.Id)
             {
