@@ -8,7 +8,7 @@ namespace CodeClinic.Application.Common.Interfaces
     public interface IApplicationDbContext
     {
 
-        DbSet<Issue> Issues {get;set;}
+        DbSet<IssueTicket> Issues {get;set;}
    
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }

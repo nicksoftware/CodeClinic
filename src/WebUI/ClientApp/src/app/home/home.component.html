@@ -1,11 +1,48 @@
-<h1>Welcome to the Code Clinic</h1>
-<p>Lets help debug your Code</p>
 
 
-<div class="row" *ngIf="issuesListvm">
-  <ul>
-    <li *ngFor="let issue of issuesListvm">
-      {{issue.Title}}
-    </li>
-  </ul>
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <h3>Welcome to the Code Clinic</h3>
+      <p>See what issues your friends are having </p>
+    </div>
+
+
+    <div class="col-md-12">
+      <button class="btn-primary btn my-3">Add an Issue</button>
+      <ul class="list-group" *ngIf="issuesTicketList">
+        <li *ngFor="let ticket of issuesTicketList"
+            class="list-group-item">
+          <div class="row">
+            <div class="col">
+              {{ticket.title}}
+            </div>
+            <div>
+              <button class="btn btn-success mx-2" (click)="onIssueTicketClick(modalTemplate,ticket)">Diagnose</button>
+            </div>
+          </div>
+
+
+          <ng-template #modalTemplate>
+            <div class="modal-header">
+              <h4 class="modal-title pull-left">{{ticket.title}}</h4>
+              <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <h4>Issue Ticket Details</h4>
+
+              {{ticket.body}}
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" (click)="modalRef.hide()">Close</button>
+            </div>
+          </ng-template>
+
+        </li>
+      </ul>
+    </div>
+  </div>
+
 </div>

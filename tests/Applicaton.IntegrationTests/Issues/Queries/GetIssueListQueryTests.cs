@@ -14,7 +14,7 @@ namespace CodeClinic.Application.IntegrationTests.Issues.Queries
         [Test]
         public async Task ShouldReturnListOfIssues()
         {
-            var query = new GetIssueListQuery();
+            var query = new GetIssueTicketListQuery();
 
             var result = await SendAsync(query);
 

@@ -18,7 +18,7 @@ namespace CodeClinic.Application.IntegrationTests.Issues.Commands
         [Test]
         public void WhenDeleteIssueCommand_Called_ShouldRequireValidIssueId()
         {
-            var command = new DeleteIssueCommand { Id = 99};
+            var command = new DeleteIssueTicketCommand { Id = 99};
 
             FluentActions.Invoking(() =>
                 SendAsync(command)).Should().Throw<NotFoundException>();
@@ -27,7 +27,7 @@ namespace CodeClinic.Application.IntegrationTests.Issues.Commands
         [Test]
         public void WhenDeleteCommandCalled_With_NegativeIssueId_ShouldRequireValidId()
         {
-            var command = new DeleteIssueCommand { Id = -1 };
+            var command = new DeleteIssueTicketCommand { Id = -1 };
 
             FluentActions.Invoking(() =>
             SendAsync(command)).Should().Throw<IndexOutOfRangeException>();

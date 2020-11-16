@@ -29,7 +29,7 @@ namespace CodeClinic.Application.UnitTests.Common.Mappings
         }
         
         [Test]
-        [TestCase(typeof(Issue), typeof(IssueDto))]
+        [TestCase(typeof(IssueTicket), typeof(IssueTicketDto))]
         public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination)
         {
             var instance = Activator.CreateInstance(source);

@@ -14,17 +14,17 @@ import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase } from '@angula
 
 export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
-export interface IIssuesClient {
-    getAll(): Observable<IssueListVm>;
-    create(command: CreateIssueCommand): Observable<number>;
-    update(id: number, command: UpdateIssueCommand): Observable<FileResponse>;
+export interface IIssueTicketsClient {
+    getAll(): Observable<IssueTicketListVm>;
+    create(command: CreateIssueTicketCommand): Observable<number>;
+    update(id: number, command: UpdateIssueTicketCommand): Observable<FileResponse>;
     delete(id: number): Observable<FileResponse>;
 }
 
 @Injectable({
     providedIn: 'root'
 })
-export class IssuesClient implements IIssuesClient {
+export class IssueTicketsClient implements IIssueTicketsClient {
     private http: HttpClient;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -34,8 +34,8 @@ export class IssuesClient implements IIssuesClient {
         this.baseUrl = baseUrl ? baseUrl : "";
     }
 
-    getAll(): Observable<IssueListVm> {
-        let url_ = this.baseUrl + "/api/Issues";
+    getAll(): Observable<IssueTicketListVm> {
+        let url_ = this.baseUrl + "/api/IssueTickets";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -53,14 +53,14 @@ export class IssuesClient implements IIssuesClient {
                 try {
                     return this.processGetAll(<any>response_);
                 } catch (e) {
-                    return <Observable<IssueListVm>><any>_observableThrow(e);
+                    return <Observable<IssueTicketListVm>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<IssueListVm>><any>_observableThrow(response_);
+                return <Observable<IssueTicketListVm>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetAll(response: HttpResponseBase): Observable<IssueListVm> {
+    protected processGetAll(response: HttpResponseBase): Observable<IssueTicketListVm> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
@@ -71,7 +71,7 @@ export class IssuesClient implements IIssuesClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = IssueListVm.fromJS(resultData200);
+            result200 = IssueTicketListVm.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -79,11 +79,11 @@ export class IssuesClient implements IIssuesClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<IssueListVm>(<any>null);
+        return _observableOf<IssueTicketListVm>(<any>null);
     }
 
-    create(command: CreateIssueCommand): Observable<number> {
-        let url_ = this.baseUrl + "/api/Issues";
+    create(command: CreateIssueTicketCommand): Observable<number> {
+        let url_ = this.baseUrl + "/api/IssueTickets";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(command);
@@ -134,8 +134,8 @@ export class IssuesClient implements IIssuesClient {
         return _observableOf<number>(<any>null);
     }
 
-    update(id: number, command: UpdateIssueCommand): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/api/Issues/{id}";
+    update(id: number, command: UpdateIssueTicketCommand): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/api/IssueTickets/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
@@ -188,7 +188,7 @@ export class IssuesClient implements IIssuesClient {
     }
 
     delete(id: number): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/api/Issues/{id}";
+        let url_ = this.baseUrl + "/api/IssueTickets/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
@@ -237,11 +237,11 @@ export class IssuesClient implements IIssuesClient {
     }
 }
 
-export class IssueListVm implements IIssueListVm {
+export class IssueTicketListVm implements IIssueTicketListVm {
     progressStatuses?: ProgressStatusDto[] | undefined;
-    issues?: IssueDto[] | undefined;
+    issues?: IssueTicketDto[] | undefined;
 
-    constructor(data?: IIssueListVm) {
+    constructor(data?: IIssueTicketListVm) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -260,14 +260,14 @@ export class IssueListVm implements IIssueListVm {
             if (Array.isArray(_data["issues"])) {
                 this.issues = [] as any;
                 for (let item of _data["issues"])
-                    this.issues!.push(IssueDto.fromJS(item));
+                    this.issues!.push(IssueTicketDto.fromJS(item));
             }
         }
     }
 
-    static fromJS(data: any): IssueListVm {
+    static fromJS(data: any): IssueTicketListVm {
         data = typeof data === 'object' ? data : {};
-        let result = new IssueListVm();
+        let result = new IssueTicketListVm();
         result.init(data);
         return result;
     }
@@ -288,9 +288,9 @@ export class IssueListVm implements IIssueListVm {
     }
 }
 
-export interface IIssueListVm {
+export interface IIssueTicketListVm {
     progressStatuses?: ProgressStatusDto[] | undefined;
-    issues?: IssueDto[] | undefined;
+    issues?: IssueTicketDto[] | undefined;
 }
 
 export class ProgressStatusDto implements IProgressStatusDto {
@@ -333,14 +333,14 @@ export interface IProgressStatusDto {
     name?: string | undefined;
 }
 
-export class IssueDto implements IIssueDto {
+export class IssueTicketDto implements IIssueTicketDto {
     id?: number;
     title?: string | undefined;
     stars?: number;
     status?: number;
     body?: string | undefined;
 
-    constructor(data?: IIssueDto) {
+    constructor(data?: IIssueTicketDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -359,9 +359,9 @@ export class IssueDto implements IIssueDto {
         }
     }
 
-    static fromJS(data: any): IssueDto {
+    static fromJS(data: any): IssueTicketDto {
         data = typeof data === 'object' ? data : {};
-        let result = new IssueDto();
+        let result = new IssueTicketDto();
         result.init(data);
         return result;
     }
@@ -377,7 +377,7 @@ export class IssueDto implements IIssueDto {
     }
 }
 
-export interface IIssueDto {
+export interface IIssueTicketDto {
     id?: number;
     title?: string | undefined;
     stars?: number;
@@ -385,11 +385,11 @@ export interface IIssueDto {
     body?: string | undefined;
 }
 
-export class CreateIssueCommand implements ICreateIssueCommand {
+export class CreateIssueTicketCommand implements ICreateIssueTicketCommand {
     title?: string | undefined;
     body?: string | undefined;
 
-    constructor(data?: ICreateIssueCommand) {
+    constructor(data?: ICreateIssueTicketCommand) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -405,9 +405,9 @@ export class CreateIssueCommand implements ICreateIssueCommand {
         }
     }
 
-    static fromJS(data: any): CreateIssueCommand {
+    static fromJS(data: any): CreateIssueTicketCommand {
         data = typeof data === 'object' ? data : {};
-        let result = new CreateIssueCommand();
+        let result = new CreateIssueTicketCommand();
         result.init(data);
         return result;
     }
@@ -420,18 +420,18 @@ export class CreateIssueCommand implements ICreateIssueCommand {
     }
 }
 
-export interface ICreateIssueCommand {
+export interface ICreateIssueTicketCommand {
     title?: string | undefined;
     body?: string | undefined;
 }
 
-export class UpdateIssueCommand implements IUpdateIssueCommand {
+export class UpdateIssueTicketCommand implements IUpdateIssueTicketCommand {
     id?: number;
     title?: string | undefined;
     status?: ProgressStatus;
     body?: string | undefined;
 
-    constructor(data?: IUpdateIssueCommand) {
+    constructor(data?: IUpdateIssueTicketCommand) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -449,9 +449,9 @@ export class UpdateIssueCommand implements IUpdateIssueCommand {
         }
     }
 
-    static fromJS(data: any): UpdateIssueCommand {
+    static fromJS(data: any): UpdateIssueTicketCommand {
         data = typeof data === 'object' ? data : {};
-        let result = new UpdateIssueCommand();
+        let result = new UpdateIssueTicketCommand();
         result.init(data);
         return result;
     }
@@ -466,7 +466,7 @@ export class UpdateIssueCommand implements IUpdateIssueCommand {
     }
 }
 
-export interface IUpdateIssueCommand {
+export interface IUpdateIssueTicketCommand {
     id?: number;
     title?: string | undefined;
     status?: ProgressStatus;

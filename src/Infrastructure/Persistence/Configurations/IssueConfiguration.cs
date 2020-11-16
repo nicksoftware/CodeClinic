@@ -7,9 +7,9 @@ using System.Text;
 
 namespace CodeClinic.Infrastructure.Persistence.Configurations
 {
-    public class IssueConfiguration : IEntityTypeConfiguration<Issue>
+    public class IssueConfiguration : IEntityTypeConfiguration<IssueTicket>
     {
-        public void Configure(EntityTypeBuilder<Issue> builder)
+        public void Configure(EntityTypeBuilder<IssueTicket> builder)
         {
             builder.Property(t => t.Title)
                 .HasMaxLength(200)

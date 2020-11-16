@@ -17,7 +17,7 @@ namespace CodeClinic.Application.IntegrationTests.Issues.Commands
         [Test]
         public void ShouldRequireMinimumFields()
         {
-            var command = new CreateIssueCommand();
+            var command = new CreateIssueTicketCommand();
 
             FluentActions.Invoking(() =>
                 SendAsync(command)).Should().Throw<ValidationException>();
@@ -28,14 +28,14 @@ namespace CodeClinic.Application.IntegrationTests.Issues.Commands
         {
             var userId = await RunAsDefaultUserAsync();
 
-            var command = new CreateIssueCommand
+            var command = new CreateIssueTicketCommand
             {
                 Title = "Tasks"
             };
 
             var itemId = await SendAsync(command);
 
-            var item = await FindAsync<Issue>(itemId);
+            var item = await FindAsync<IssueTicket>(itemId);
 
             item.Should().NotBeNull();
  

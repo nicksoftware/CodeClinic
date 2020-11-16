@@ -18,7 +18,7 @@ namespace CodeClinic.Application.IntegrationTests.Issues.Commands
         [Test]
         public void UpdateIssueCommandCalled_ShouldRequireValidId()
         {
-            var command = new UpdateIssueCommand
+            var command = new UpdateIssueTicketCommand
             {
                 Id = 99,
                 Title = "New Title"
@@ -37,12 +37,12 @@ namespace CodeClinic.Application.IntegrationTests.Issues.Commands
             var userId = await RunAsDefaultUserAsync();
 
 
-            var itemId = await SendAsync(new CreateIssueCommand
+            var itemId = await SendAsync(new CreateIssueTicketCommand
             {
                 Title = "New Issue"
             });
 
-            var command = new UpdateIssueCommand
+            var command = new UpdateIssueTicketCommand
             {
                 Id = itemId,
                 Title = "Updated Issue",
@@ -52,7 +52,7 @@ namespace CodeClinic.Application.IntegrationTests.Issues.Commands
 
             await SendAsync(command);
 
-            var item = await FindAsync<Issue>(itemId);
+            var item = await FindAsync<IssueTicket>(itemId);
 
             item.Title.Should().NotBe(command.Title);
             item.Body.Should().NotBe(command.Body);

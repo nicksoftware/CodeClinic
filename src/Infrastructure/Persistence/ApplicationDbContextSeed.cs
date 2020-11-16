@@ -25,23 +25,23 @@ namespace CodeClinic.Infrastructure.Persistence
             if (!context.Issues.Any())
             {
                 context.Issues.AddRange(
-                    new List<Issue>
+                    new List<IssueTicket>
                     {
-                        new Issue{
+                        new IssueTicket{
                             Title = "😥 I broke my Clients Ecommece System Please Help",
                             Body = "I was Updating to the latest version of entity framework and everything went west of westeros", 
                         },
 
-                        new Issue{
+                        new IssueTicket{
                             Title = "My Xamarin 📱 Application Has a Bug ,I cant Fix",
                             Body = "I  cant seem to create a new page ",
                         },
-                        new Issue{
+                        new IssueTicket{
                             Title = "😫 How do I integrate CICD on Web application",
                             Body = "Help hellp help ,I am frustrated",
                         },
 
-                        new Issue{
+                        new IssueTicket{
                             Title = "Fix me! it Says ,But ☹ I dont know How",
                             Body = "Help me pleae ,Anyone someone ",
                         },

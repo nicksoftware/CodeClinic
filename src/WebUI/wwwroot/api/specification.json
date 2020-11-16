@@ -6,19 +6,19 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/api/Issues": {
+    "/api/IssueTickets": {
       "get": {
         "tags": [
-          "Issues"
+          "IssueTickets"
         ],
-        "operationId": "Issues_GetAll",
+        "operationId": "IssueTickets_GetAll",
         "responses": {
           "200": {
             "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/IssueListVm"
+                  "$ref": "#/components/schemas/IssueTicketListVm"
                 }
               }
             }
@@ -32,15 +32,15 @@
       },
       "post": {
         "tags": [
-          "Issues"
+          "IssueTickets"
         ],
-        "operationId": "Issues_Create",
+        "operationId": "IssueTickets_Create",
         "requestBody": {
           "x-name": "command",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateIssueCommand"
+                "$ref": "#/components/schemas/CreateIssueTicketCommand"
               }
             }
           },
@@ -67,12 +67,12 @@
         ]
       }
     },
-    "/api/Issues/{id}": {
+    "/api/IssueTickets/{id}": {
       "put": {
         "tags": [
-          "Issues"
+          "IssueTickets"
         ],
-        "operationId": "Issues_Update",
+        "operationId": "IssueTickets_Update",
         "parameters": [
           {
             "name": "id",
@@ -90,7 +90,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateIssueCommand"
+                "$ref": "#/components/schemas/UpdateIssueTicketCommand"
               }
             }
           },
@@ -118,9 +118,9 @@
       },
       "delete": {
         "tags": [
-          "Issues"
+          "IssueTickets"
         ],
-        "operationId": "Issues_Delete",
+        "operationId": "IssueTickets_Delete",
         "parameters": [
           {
             "name": "id",
@@ -156,7 +156,7 @@
   },
   "components": {
     "schemas": {
-      "IssueListVm": {
+      "IssueTicketListVm": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -171,7 +171,7 @@
             "type": "array",
             "nullable": true,
             "items": {
-              "$ref": "#/components/schemas/IssueDto"
+              "$ref": "#/components/schemas/IssueTicketDto"
             }
           }
         }
@@ -190,7 +190,7 @@
           }
         }
       },
-      "IssueDto": {
+      "IssueTicketDto": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -216,7 +216,7 @@
           }
         }
       },
-      "CreateIssueCommand": {
+      "CreateIssueTicketCommand": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -230,7 +230,7 @@
           }
         }
       },
-      "UpdateIssueCommand": {
+      "UpdateIssueTicketCommand": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
