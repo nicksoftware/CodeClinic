@@ -22,9 +22,9 @@ namespace CodeClinic.Infrastructure.Persistence
         public static async Task SeedSampleDataAsync(ApplicationDbContext context)
         {
             // Seed, if necessary
-            if (!context.Issues.Any())
+            if (!context.IssueTickets.Any())
             {
-                context.Issues.AddRange(
+                context.IssueTickets.AddRange(
                     new List<IssueTicket>
                     {
                         new IssueTicket{

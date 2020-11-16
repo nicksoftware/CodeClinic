@@ -28,7 +28,7 @@ namespace CodeClinic.Application.Issues.Queries.GetIssueList
         }
         public async Task<IssueTicketListVm> Handle(GetIssueTicketListQuery request, CancellationToken cancellationToken)
         {
-            var issues =  await _context.Issues
+            var issues =  await _context.IssueTickets
                 .ProjectTo<IssueTicketDto>(_mapper.ConfigurationProvider)
                 .OrderBy(i => i.Title).ToListAsync(cancellationToken);
 

@@ -4,12 +4,9 @@
   <div class="row">
     <div class="col-md-12">
       <h3>Welcome to the Code Clinic</h3>
-      <p>See what issues your friends are having </p>
+      <hr/>
     </div>
-
-
     <div class="col-md-12">
-      <button class="btn-primary btn my-3">Add an Issue</button>
       <ul class="list-group" *ngIf="issuesTicketList">
         <li *ngFor="let ticket of issuesTicketList"
             class="list-group-item">
@@ -21,7 +18,6 @@
               <button class="btn btn-success mx-2" (click)="onIssueTicketClick(modalTemplate,ticket)">Diagnose</button>
             </div>
           </div>
-
 
           <ng-template #modalTemplate>
             <div class="modal-header">

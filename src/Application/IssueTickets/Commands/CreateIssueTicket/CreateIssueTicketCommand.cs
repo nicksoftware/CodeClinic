@@ -28,7 +28,7 @@ namespace Application.Issues.Commands.CreateIssue
                 Body = request.Body,
             };
 
-            _context.Issues.Add(entity);
+            _context.IssueTickets.Add(entity);
 
             await _context.SaveChangesAsync(cancellationToken);
             return entity.Id;

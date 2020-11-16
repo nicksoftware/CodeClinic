@@ -29,7 +29,7 @@ namespace CodeClinic.Application.Issues.Commands.UpdateIssue
 
             public async Task<Unit> Handle(UpdateIssueTicketCommand request, CancellationToken cancellationToken)
             {
-                var entity = await _ctx.Issues.FindAsync(request.Id);
+                var entity = await _ctx.IssueTickets.FindAsync(request.Id);
 
                 if (entity == null) throw new NotFoundException(nameof(IssueTicket), request.Id);
 
@@ -37,7 +37,7 @@ namespace CodeClinic.Application.Issues.Commands.UpdateIssue
                 entity.Body = request.Body;
                 entity.Status = request.Status;
 
-                _ctx.Issues.Update(entity);
+                _ctx.IssueTickets.Update(entity);
 
                 await _ctx.SaveChangesAsync(cancellationToken);
 

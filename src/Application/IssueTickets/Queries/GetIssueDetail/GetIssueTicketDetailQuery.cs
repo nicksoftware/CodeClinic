@@ -32,7 +32,7 @@ namespace CodeClinic.Application.IssueItems.Queries.GetIssueDetail
         }
         public async Task<IssueTicketDetailVm> Handle(GetIssueTicketDetailQuery request, CancellationToken cancellationToken)
         {
-            var viewModel = await _context.Issues
+            var viewModel = await _context.IssueTickets
                 .ProjectTo<IssueTicketDetailVm>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(i => i.IssueId == request.Id, cancellationToken);
                 

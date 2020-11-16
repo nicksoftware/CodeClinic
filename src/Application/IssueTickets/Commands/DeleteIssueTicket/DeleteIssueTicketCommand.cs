@@ -26,14 +26,14 @@ namespace CodeClinic.Application.Issues.Commands.DeleteIssue
         }
         public async Task<Unit> Handle(DeleteIssueTicketCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _context.Issues.FindAsync(request.Id);
+            var entity = await _context.IssueTickets.FindAsync(request.Id);
 
             if (entity == null)
             {
                 throw new NotFoundException(nameof(IssueTicket), request.Id);
             }
 
-            _context.Issues.Remove(entity);
+            _context.IssueTickets.Remove(entity);
 
             await _context.SaveChangesAsync(cancellationToken);
 
