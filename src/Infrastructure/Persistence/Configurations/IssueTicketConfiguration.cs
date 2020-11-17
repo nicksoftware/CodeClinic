@@ -7,7 +7,7 @@ using System.Text;
 
 namespace CodeClinic.Infrastructure.Persistence.Configurations
 {
-    public class IssueConfiguration : IEntityTypeConfiguration<IssueTicket>
+    public class IssueTicketConfiguration : IEntityTypeConfiguration<IssueTicket>
     {
         public void Configure(EntityTypeBuilder<IssueTicket> builder)
         {

@@ -26,7 +26,8 @@ namespace CodeClinic.Application.Issues.Queries.GetIssueList
             _context = context;
             _mapper = mapper;
         }
-        public async Task<IssueTicketListVm> Handle(GetIssueTicketListQuery request, CancellationToken cancellationToken)
+        public async Task<IssueTicketListVm> Handle(GetIssueTicketListQuery request,
+            CancellationToken cancellationToken)
         {
             var issues =  await _context.IssueTickets
                 .ProjectTo<IssueTicketDto>(_mapper.ConfigurationProvider)

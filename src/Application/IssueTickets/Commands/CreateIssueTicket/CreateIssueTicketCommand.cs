@@ -1,3 +1,4 @@
+using CodeClinic.Domain.Entities;
 using MediatR;
 
 namespace Application.Issues.Commands.CreateIssue
@@ -7,7 +8,8 @@ namespace Application.Issues.Commands.CreateIssue
         public int Id { get; set; }
 
         public string Title { get; set; }
-        
+
+        public int  CategoryId { get; set; }
         public string Body { get; set; }
   
     }

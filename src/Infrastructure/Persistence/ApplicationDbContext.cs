@@ -31,6 +31,7 @@ namespace CodeClinic.Infrastructure.Persistence
         }
 
         public DbSet<IssueTicket> IssueTickets { get  ; set ; }
+        public DbSet<Category> Categories {get; set ; }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {

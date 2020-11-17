@@ -18,7 +18,9 @@ namespace Application.Issues.Commands.CreateIssue
             var entity = new IssueTicket
             {
                 Title = request.Title,
+                CategoryId = request.CategoryId,
                 Body = request.Body,
+                
             };
 
             _context.IssueTickets.Add(entity);

@@ -4,11 +4,9 @@ using CodeClinic.Application.Issues.Commands.DeleteIssue;
 using CodeClinic.Application.Issues.Commands.UpdateIssue;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using CodeClinic.Application.IssueTickets.Commands.UpdateIssueTicket;
+using CodeClinic.Application.IssueItems.Queries.GetIssueDetail;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -23,6 +21,13 @@ namespace CodeClinic.WebUI.Controllers
             return await Mediator.Send(new GetIssueTicketListQuery());
         }
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult<IssueTicketDto>> GetIssueTicketById(int id)
+        {
+          
+            return await Mediator.Send(new GetIssueTicketDetailQuery { Id = id });
+        }
+
         [HttpPost]
         public async Task<ActionResult<int>> Create(CreateIssueTicketCommand command)
         {
@@ -33,9 +38,7 @@ namespace CodeClinic.WebUI.Controllers
         public async Task<ActionResult> Update(int id, UpdateIssueTicketCommand command)
         {
             if (id != command.Id)
-            {
                 return BadRequest();
-            }
 
             await Mediator.Send(command);
 

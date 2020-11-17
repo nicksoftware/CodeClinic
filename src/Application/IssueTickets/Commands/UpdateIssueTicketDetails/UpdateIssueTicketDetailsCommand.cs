@@ -15,6 +15,7 @@ namespace CodeClinic.Application.Issues.Commands.UpdateIssue
     { 
         public int Id { get; set; }
         public string Title { get; set; }
+        public int CategoryId { get; set; }
         public string  Body { get; set; }
 
         public class UpdateIssueDetailsCommandHandler : IRequestHandler<UpdateIssueTicketDetailsCommand>
@@ -34,6 +35,7 @@ namespace CodeClinic.Application.Issues.Commands.UpdateIssue
 
                 entity.Title = request.Title;
                 entity.Body = request.Body;
+                entity.CategoryId = request.CategoryId;
 
                 _ctx.IssueTickets.Update(entity);
 

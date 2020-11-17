@@ -27,7 +27,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
     FormsModule,
     ApiAuthorizationModule,
     RouterModule.forRoot([
-      { path: '', component: HomeComponent, pathMatch: 'full', canActivate: [AuthorizeGuard] },
+      { path: '', component: HomeComponent, pathMatch: 'full' },
     ]),
     BrowserAnimationsModule,
     ModalModule.forRoot()

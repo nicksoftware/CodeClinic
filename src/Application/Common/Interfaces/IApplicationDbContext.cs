@@ -9,7 +9,7 @@ namespace CodeClinic.Application.Common.Interfaces
     {
 
         DbSet<IssueTicket> IssueTickets {get;set;}
-   
+        DbSet<Category> Categories { get; set; }
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }
