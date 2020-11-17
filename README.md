@@ -3,7 +3,7 @@
 [![Twitter Follow](https://img.shields.io/twitter/follow/hnicolus.svg?style=social&label=Follow)](https://twitter.com/hnicolus)
 
 <br/>
-Coding forum where developers can come for code assistance  with Angular and ASP.NET Core following the principles of Clean Architecture. 
+Coding forum where developers can come for code assistance  with Angular and ASP.NET Core following the principles of Clean Architecture, CQRS . 
 
 ## Technologies
 
@@ -18,7 +18,7 @@ Coding forum where developers can come for code assistance  with Angular and ASP
 
 ## Getting Started
 
-1. Fork Repository
+1. Clone Repository
 2. Navigate to solution folder 
 3. Open Terminal 
 4. run `dotnet restore`
