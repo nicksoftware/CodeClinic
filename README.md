@@ -4,12 +4,8 @@
 
 <br/>
 Coding forum where developers can come for code assistance  with Angular and ASP.NET Core following the principles of Clean Architecture.
-<br/>
-### Roadmap 
-- [x] Research
-- [x] Setup
-- [x] Base Entities 
-- [ ] MVP
+
+
 
 ## Technologies
 
@@ -74,5 +70,13 @@ This layer contains classes for accessing external resources such as file system
 
 This layer is a single page application based on Angular 9 and ASP.NET Core 3.1. This layer depends on both the Application and Infrastructure layers, however, the dependency on Infrastructure is only to support dependency injection. Therefore only *Startup.cs* should reference Infrastructure.
 
+### Roadmap 
 
+- [x] esearch
+- [x] Setup
+- [x] Base Entities
+- [ ] Complete business Logic
+- [ ] minimum UI
+- [ ] MVP
+- [ ] Machine Learning
 ## License
