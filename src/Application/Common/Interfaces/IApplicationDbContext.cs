@@ -8,8 +8,8 @@ namespace CodeClinic.Application.Common.Interfaces
     public interface IApplicationDbContext
     {
 
-        DbSet<Issue> Issues {get;set;}
-   
+        DbSet<IssueTicket> IssueTickets {get;set;}
+        DbSet<Category> Categories { get; set; }
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }

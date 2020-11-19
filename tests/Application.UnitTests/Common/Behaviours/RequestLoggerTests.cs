@@ -12,14 +12,14 @@ namespace CodeClinic.Application.UnitTests.Common.Behaviours
 {
     public class RequestLoggerTests
     {
-        private readonly Mock<ILogger<CreateIssueCommand>> _logger;
+        private readonly Mock<ILogger<CreateIssueTicketCommand>> _logger;
         private readonly Mock<ICurrentUserService> _currentUserService;
         private readonly Mock<IIdentityService> _identityService;
 
 
         public RequestLoggerTests()
         {
-            _logger = new Mock<ILogger<CreateIssueCommand>>();
+            _logger = new Mock<ILogger<CreateIssueTicketCommand>>();
 
             _currentUserService = new Mock<ICurrentUserService>();
 
@@ -31,9 +31,9 @@ namespace CodeClinic.Application.UnitTests.Common.Behaviours
         {
             _currentUserService.Setup(x => x.UserId).Returns("Administrator");
 
-            var requestLogger = new LoggingBehaviour<CreateIssueCommand>(_logger.Object, _currentUserService.Object, _identityService.Object);
+            var requestLogger = new LoggingBehaviour<CreateIssueTicketCommand>(_logger.Object, _currentUserService.Object, _identityService.Object);
 
-            await requestLogger.Process(new CreateIssueCommand {  Title = "title" }, new CancellationToken());
+            await requestLogger.Process(new CreateIssueTicketCommand {  Title = "title" }, new CancellationToken());
 
             _identityService.Verify(i => i.GetUserNameAsync(It.IsAny<string>()), Times.Once);
         }
@@ -41,9 +41,9 @@ namespace CodeClinic.Application.UnitTests.Common.Behaviours
         [Test]
         public async Task ShouldNotCallGetUserNameAsyncOnceIfUnauthenticated()
         {
-            var requestLogger = new LoggingBehaviour<CreateIssueCommand>(_logger.Object, _currentUserService.Object, _identityService.Object);
+            var requestLogger = new LoggingBehaviour<CreateIssueTicketCommand>(_logger.Object, _currentUserService.Object, _identityService.Object);
 
-            await requestLogger.Process(new CreateIssueCommand {  Title = "title" }, new CancellationToken());
+            await requestLogger.Process(new CreateIssueTicketCommand {  Title = "title" }, new CancellationToken());
 
             _identityService.Verify(i => i.GetUserNameAsync(null), Times.Never);
         }

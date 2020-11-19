@@ -2,23 +2,190 @@
   "x-generator": "NSwag v13.3.0.0 (NJsonSchema v10.1.11.0 (Newtonsoft.Json v12.0.0.0))",
   "openapi": "3.0.0",
   "info": {
-    "title": "CodeClinic API",
+    "title": "Code Clinic API",
     "version": "1.0.0"
   },
   "paths": {
-    "/api/Issues": {
+    "/api/Categories": {
       "get": {
         "tags": [
-          "Issues"
+          "Categories"
         ],
-        "operationId": "Issues_GetAll",
+        "operationId": "Categories_GetAll",
         "responses": {
           "200": {
             "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/IssueListVm"
+                  "$ref": "#/components/schemas/CategoryListVm"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Categories"
+        ],
+        "operationId": "Categories_Create",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCategoryCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Categories/{id}": {
+      "get": {
+        "tags": [
+          "Categories"
+        ],
+        "operationId": "Categories_GetCategoryById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryDetailVm"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Categories"
+        ],
+        "operationId": "Categories_Update",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCategoryCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Categories"
+        ],
+        "operationId": "Categories_Delete",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteCategoryCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/IssueTickets": {
+      "get": {
+        "tags": [
+          "IssueTickets"
+        ],
+        "operationId": "IssueTickets_GetAll",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IssueTicketListVm"
                 }
               }
             }
@@ -32,15 +199,15 @@
       },
       "post": {
         "tags": [
-          "Issues"
+          "IssueTickets"
         ],
-        "operationId": "Issues_Create",
+        "operationId": "IssueTickets_Create",
         "requestBody": {
           "x-name": "command",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateIssueCommand"
+                "$ref": "#/components/schemas/CreateIssueTicketCommand"
               }
             }
           },
@@ -67,12 +234,47 @@
         ]
       }
     },
-    "/api/Issues/{id}": {
+    "/api/IssueTickets/{id}": {
+      "get": {
+        "tags": [
+          "IssueTickets"
+        ],
+        "operationId": "IssueTickets_GetIssueTicketById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IssueTicketDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      },
       "put": {
         "tags": [
-          "Issues"
+          "IssueTickets"
         ],
-        "operationId": "Issues_Update",
+        "operationId": "IssueTickets_Update",
         "parameters": [
           {
             "name": "id",
@@ -90,7 +292,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateIssueCommand"
+                "$ref": "#/components/schemas/UpdateIssueTicketCommand"
               }
             }
           },
@@ -118,9 +320,9 @@
       },
       "delete": {
         "tags": [
-          "Issues"
+          "IssueTickets"
         ],
-        "operationId": "Issues_Delete",
+        "operationId": "IssueTickets_Delete",
         "parameters": [
           {
             "name": "id",
@@ -152,11 +354,226 @@
           }
         ]
       }
+    },
+    "/api/IssueTickets/UpdateDetails": {
+      "put": {
+        "tags": [
+          "IssueTickets"
+        ],
+        "operationId": "IssueTickets_UpdateDetails",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateIssueTicketDetailsCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
     }
   },
   "components": {
     "schemas": {
-      "IssueListVm": {
+      "CategoryListVm": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "categories": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/CategoryDto"
+            }
+          }
+        }
+      },
+      "CategoryDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "categoryId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "CategoryDetailVm": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "categoryId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "categoryName": {
+            "type": "string",
+            "nullable": true
+          },
+          "categoryDescription": {
+            "type": "string",
+            "nullable": true
+          },
+          "dateCreated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastModifiedBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastModified": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "issuesTickets": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/IssueTicketDto"
+            }
+          }
+        }
+      },
+      "IssueTicketDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "issueTicketId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "categoryId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "categoryName": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "stars": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "body": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "dateCreated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastModifiedBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastModified": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "CreateCategoryCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "UpdateCategoryCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "DeleteCategoryCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "IssueTicketListVm": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -171,7 +588,7 @@
             "type": "array",
             "nullable": true,
             "items": {
-              "$ref": "#/components/schemas/IssueDto"
+              "$ref": "#/components/schemas/IssueTicketDto"
             }
           }
         }
@@ -190,7 +607,7 @@
           }
         }
       },
-      "IssueDto": {
+      "CreateIssueTicketCommand": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -201,53 +618,35 @@
           "title": {
             "type": "string",
             "nullable": true
+          },
+          "categoryId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "body": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "UpdateIssueTicketCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "categoryId": {
+            "type": "integer",
+            "format": "int32"
           },
           "stars": {
             "type": "integer",
             "format": "int32"
           },
           "status": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "body": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "CreateIssueCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "title": {
-            "type": "string",
-            "nullable": true
-          },
-          "body": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "UpdateIssueCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "title": {
-            "type": "string",
-            "nullable": true
-          },
-          "status": {
             "$ref": "#/components/schemas/ProgressStatus"
-          },
-          "body": {
-            "type": "string",
-            "nullable": true
           }
         }
       },
@@ -264,6 +663,28 @@
           1,
           2
         ]
+      },
+      "UpdateIssueTicketDetailsCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "categoryId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "body": {
+            "type": "string",
+            "nullable": true
+          }
+        }
       }
     },
     "securitySchemes": {

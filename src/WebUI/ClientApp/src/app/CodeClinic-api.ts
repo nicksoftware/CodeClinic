@@ -14,17 +14,18 @@ import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase } from '@angula
 
 export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
-export interface IIssuesClient {
-    getAll(): Observable<IssueListVm>;
-    create(command: CreateIssueCommand): Observable<number>;
-    update(id: number, command: UpdateIssueCommand): Observable<FileResponse>;
-    delete(id: number): Observable<FileResponse>;
+export interface ICategoriesClient {
+    getAll(): Observable<CategoryListVm>;
+    create(command: CreateCategoryCommand): Observable<number>;
+    getCategoryById(id: number): Observable<CategoryDetailVm>;
+    update(id: string, command: UpdateCategoryCommand): Observable<FileResponse>;
+    delete(id: string, command: DeleteCategoryCommand): Observable<FileResponse>;
 }
 
 @Injectable({
     providedIn: 'root'
 })
-export class IssuesClient implements IIssuesClient {
+export class CategoriesClient implements ICategoriesClient {
     private http: HttpClient;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -34,8 +35,8 @@ export class IssuesClient implements IIssuesClient {
         this.baseUrl = baseUrl ? baseUrl : "";
     }
 
-    getAll(): Observable<IssueListVm> {
-        let url_ = this.baseUrl + "/api/Issues";
+    getAll(): Observable<CategoryListVm> {
+        let url_ = this.baseUrl + "/api/Categories";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -53,14 +54,14 @@ export class IssuesClient implements IIssuesClient {
                 try {
                     return this.processGetAll(<any>response_);
                 } catch (e) {
-                    return <Observable<IssueListVm>><any>_observableThrow(e);
+                    return <Observable<CategoryListVm>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<IssueListVm>><any>_observableThrow(response_);
+                return <Observable<CategoryListVm>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetAll(response: HttpResponseBase): Observable<IssueListVm> {
+    protected processGetAll(response: HttpResponseBase): Observable<CategoryListVm> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
@@ -71,7 +72,7 @@ export class IssuesClient implements IIssuesClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = IssueListVm.fromJS(resultData200);
+            result200 = CategoryListVm.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -79,11 +80,11 @@ export class IssuesClient implements IIssuesClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<IssueListVm>(<any>null);
+        return _observableOf<CategoryListVm>(<any>null);
     }
 
-    create(command: CreateIssueCommand): Observable<number> {
-        let url_ = this.baseUrl + "/api/Issues";
+    create(command: CreateCategoryCommand): Observable<number> {
+        let url_ = this.baseUrl + "/api/Categories";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(command);
@@ -134,8 +135,339 @@ export class IssuesClient implements IIssuesClient {
         return _observableOf<number>(<any>null);
     }
 
-    update(id: number, command: UpdateIssueCommand): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/api/Issues/{id}";
+    getCategoryById(id: number): Observable<CategoryDetailVm> {
+        let url_ = this.baseUrl + "/api/Categories/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetCategoryById(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetCategoryById(<any>response_);
+                } catch (e) {
+                    return <Observable<CategoryDetailVm>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CategoryDetailVm>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetCategoryById(response: HttpResponseBase): Observable<CategoryDetailVm> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CategoryDetailVm.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CategoryDetailVm>(<any>null);
+    }
+
+    update(id: string, command: UpdateCategoryCommand): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/api/Categories/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+                "Accept": "application/octet-stream"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(<any>response_);
+                } catch (e) {
+                    return <Observable<FileResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<FileResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<FileResponse> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<FileResponse>(<any>null);
+    }
+
+    delete(id: string, command: DeleteCategoryCommand): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/api/Categories/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+                "Accept": "application/octet-stream"
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<FileResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<FileResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<FileResponse> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<FileResponse>(<any>null);
+    }
+}
+
+export interface IIssueTicketsClient {
+    getAll(): Observable<IssueTicketListVm>;
+    create(command: CreateIssueTicketCommand): Observable<number>;
+    getIssueTicketById(id: number): Observable<IssueTicketDto>;
+    update(id: number, command: UpdateIssueTicketCommand): Observable<FileResponse>;
+    delete(id: number): Observable<FileResponse>;
+    updateDetails(id: number | undefined, command: UpdateIssueTicketDetailsCommand): Observable<FileResponse>;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class IssueTicketsClient implements IIssueTicketsClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    getAll(): Observable<IssueTicketListVm> {
+        let url_ = this.baseUrl + "/api/IssueTickets";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<IssueTicketListVm>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<IssueTicketListVm>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<IssueTicketListVm> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = IssueTicketListVm.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<IssueTicketListVm>(<any>null);
+    }
+
+    create(command: CreateIssueTicketCommand): Observable<number> {
+        let url_ = this.baseUrl + "/api/IssueTickets";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<number>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<number>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<number> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<number>(<any>null);
+    }
+
+    getIssueTicketById(id: number): Observable<IssueTicketDto> {
+        let url_ = this.baseUrl + "/api/IssueTickets/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetIssueTicketById(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetIssueTicketById(<any>response_);
+                } catch (e) {
+                    return <Observable<IssueTicketDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<IssueTicketDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetIssueTicketById(response: HttpResponseBase): Observable<IssueTicketDto> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = IssueTicketDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<IssueTicketDto>(<any>null);
+    }
+
+    update(id: number, command: UpdateIssueTicketCommand): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/api/IssueTickets/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
@@ -188,7 +520,7 @@ export class IssuesClient implements IIssuesClient {
     }
 
     delete(id: number): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/api/Issues/{id}";
+        let url_ = this.baseUrl + "/api/IssueTickets/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
@@ -235,13 +567,423 @@ export class IssuesClient implements IIssuesClient {
         }
         return _observableOf<FileResponse>(<any>null);
     }
+
+    updateDetails(id: number | undefined, command: UpdateIssueTicketDetailsCommand): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/api/IssueTickets/UpdateDetails?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+                "Accept": "application/octet-stream"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateDetails(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateDetails(<any>response_);
+                } catch (e) {
+                    return <Observable<FileResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<FileResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdateDetails(response: HttpResponseBase): Observable<FileResponse> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<FileResponse>(<any>null);
+    }
 }
 
-export class IssueListVm implements IIssueListVm {
-    progressStatuses?: ProgressStatusDto[] | undefined;
-    issues?: IssueDto[] | undefined;
+export class CategoryListVm implements ICategoryListVm {
+    categories?: CategoryDto[] | undefined;
 
-    constructor(data?: IIssueListVm) {
+    constructor(data?: ICategoryListVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["categories"])) {
+                this.categories = [] as any;
+                for (let item of _data["categories"])
+                    this.categories!.push(CategoryDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): CategoryListVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new CategoryListVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.categories)) {
+            data["categories"] = [];
+            for (let item of this.categories)
+                data["categories"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface ICategoryListVm {
+    categories?: CategoryDto[] | undefined;
+}
+
+export class CategoryDto implements ICategoryDto {
+    categoryId?: number;
+    name?: string | undefined;
+    description?: string | undefined;
+
+    constructor(data?: ICategoryDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.categoryId = _data["categoryId"];
+            this.name = _data["name"];
+            this.description = _data["description"];
+        }
+    }
+
+    static fromJS(data: any): CategoryDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CategoryDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["categoryId"] = this.categoryId;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        return data; 
+    }
+}
+
+export interface ICategoryDto {
+    categoryId?: number;
+    name?: string | undefined;
+    description?: string | undefined;
+}
+
+export class CategoryDetailVm implements ICategoryDetailVm {
+    categoryId?: number;
+    categoryName?: string | undefined;
+    categoryDescription?: string | undefined;
+    dateCreated?: Date;
+    lastModifiedBy?: string | undefined;
+    lastModified?: Date | undefined;
+    issuesTickets?: IssueTicketDto[] | undefined;
+
+    constructor(data?: ICategoryDetailVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.categoryId = _data["categoryId"];
+            this.categoryName = _data["categoryName"];
+            this.categoryDescription = _data["categoryDescription"];
+            this.dateCreated = _data["dateCreated"] ? new Date(_data["dateCreated"].toString()) : <any>undefined;
+            this.lastModifiedBy = _data["lastModifiedBy"];
+            this.lastModified = _data["lastModified"] ? new Date(_data["lastModified"].toString()) : <any>undefined;
+            if (Array.isArray(_data["issuesTickets"])) {
+                this.issuesTickets = [] as any;
+                for (let item of _data["issuesTickets"])
+                    this.issuesTickets!.push(IssueTicketDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): CategoryDetailVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new CategoryDetailVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["categoryId"] = this.categoryId;
+        data["categoryName"] = this.categoryName;
+        data["categoryDescription"] = this.categoryDescription;
+        data["dateCreated"] = this.dateCreated ? this.dateCreated.toISOString() : <any>undefined;
+        data["lastModifiedBy"] = this.lastModifiedBy;
+        data["lastModified"] = this.lastModified ? this.lastModified.toISOString() : <any>undefined;
+        if (Array.isArray(this.issuesTickets)) {
+            data["issuesTickets"] = [];
+            for (let item of this.issuesTickets)
+                data["issuesTickets"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface ICategoryDetailVm {
+    categoryId?: number;
+    categoryName?: string | undefined;
+    categoryDescription?: string | undefined;
+    dateCreated?: Date;
+    lastModifiedBy?: string | undefined;
+    lastModified?: Date | undefined;
+    issuesTickets?: IssueTicketDto[] | undefined;
+}
+
+export class IssueTicketDto implements IIssueTicketDto {
+    issueTicketId?: number;
+    categoryId?: number;
+    categoryName?: string | undefined;
+    title?: string | undefined;
+    stars?: number;
+    status?: number;
+    body?: string | undefined;
+    createdBy?: string | undefined;
+    dateCreated?: Date;
+    lastModifiedBy?: string | undefined;
+    lastModified?: Date | undefined;
+
+    constructor(data?: IIssueTicketDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.issueTicketId = _data["issueTicketId"];
+            this.categoryId = _data["categoryId"];
+            this.categoryName = _data["categoryName"];
+            this.title = _data["title"];
+            this.stars = _data["stars"];
+            this.status = _data["status"];
+            this.body = _data["body"];
+            this.createdBy = _data["createdBy"];
+            this.dateCreated = _data["dateCreated"] ? new Date(_data["dateCreated"].toString()) : <any>undefined;
+            this.lastModifiedBy = _data["lastModifiedBy"];
+            this.lastModified = _data["lastModified"] ? new Date(_data["lastModified"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): IssueTicketDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new IssueTicketDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["issueTicketId"] = this.issueTicketId;
+        data["categoryId"] = this.categoryId;
+        data["categoryName"] = this.categoryName;
+        data["title"] = this.title;
+        data["stars"] = this.stars;
+        data["status"] = this.status;
+        data["body"] = this.body;
+        data["createdBy"] = this.createdBy;
+        data["dateCreated"] = this.dateCreated ? this.dateCreated.toISOString() : <any>undefined;
+        data["lastModifiedBy"] = this.lastModifiedBy;
+        data["lastModified"] = this.lastModified ? this.lastModified.toISOString() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IIssueTicketDto {
+    issueTicketId?: number;
+    categoryId?: number;
+    categoryName?: string | undefined;
+    title?: string | undefined;
+    stars?: number;
+    status?: number;
+    body?: string | undefined;
+    createdBy?: string | undefined;
+    dateCreated?: Date;
+    lastModifiedBy?: string | undefined;
+    lastModified?: Date | undefined;
+}
+
+export class CreateCategoryCommand implements ICreateCategoryCommand {
+    id?: number;
+    name?: string | undefined;
+    description?: string | undefined;
+
+    constructor(data?: ICreateCategoryCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.description = _data["description"];
+        }
+    }
+
+    static fromJS(data: any): CreateCategoryCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateCategoryCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        return data; 
+    }
+}
+
+export interface ICreateCategoryCommand {
+    id?: number;
+    name?: string | undefined;
+    description?: string | undefined;
+}
+
+export class UpdateCategoryCommand implements IUpdateCategoryCommand {
+    id?: number;
+    name?: string | undefined;
+    description?: string | undefined;
+
+    constructor(data?: IUpdateCategoryCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.description = _data["description"];
+        }
+    }
+
+    static fromJS(data: any): UpdateCategoryCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateCategoryCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        return data; 
+    }
+}
+
+export interface IUpdateCategoryCommand {
+    id?: number;
+    name?: string | undefined;
+    description?: string | undefined;
+}
+
+export class DeleteCategoryCommand implements IDeleteCategoryCommand {
+    id?: number;
+
+    constructor(data?: IDeleteCategoryCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): DeleteCategoryCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new DeleteCategoryCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        return data; 
+    }
+}
+
+export interface IDeleteCategoryCommand {
+    id?: number;
+}
+
+export class IssueTicketListVm implements IIssueTicketListVm {
+    progressStatuses?: ProgressStatusDto[] | undefined;
+    issues?: IssueTicketDto[] | undefined;
+
+    constructor(data?: IIssueTicketListVm) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -260,14 +1002,14 @@ export class IssueListVm implements IIssueListVm {
             if (Array.isArray(_data["issues"])) {
                 this.issues = [] as any;
                 for (let item of _data["issues"])
-                    this.issues!.push(IssueDto.fromJS(item));
+                    this.issues!.push(IssueTicketDto.fromJS(item));
             }
         }
     }
 
-    static fromJS(data: any): IssueListVm {
+    static fromJS(data: any): IssueTicketListVm {
         data = typeof data === 'object' ? data : {};
-        let result = new IssueListVm();
+        let result = new IssueTicketListVm();
         result.init(data);
         return result;
     }
@@ -288,9 +1030,9 @@ export class IssueListVm implements IIssueListVm {
     }
 }
 
-export interface IIssueListVm {
+export interface IIssueTicketListVm {
     progressStatuses?: ProgressStatusDto[] | undefined;
-    issues?: IssueDto[] | undefined;
+    issues?: IssueTicketDto[] | undefined;
 }
 
 export class ProgressStatusDto implements IProgressStatusDto {
@@ -333,14 +1075,13 @@ export interface IProgressStatusDto {
     name?: string | undefined;
 }
 
-export class IssueDto implements IIssueDto {
+export class CreateIssueTicketCommand implements ICreateIssueTicketCommand {
     id?: number;
     title?: string | undefined;
-    stars?: number;
-    status?: number;
+    categoryId?: number;
     body?: string | undefined;
 
-    constructor(data?: IIssueDto) {
+    constructor(data?: ICreateIssueTicketCommand) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -353,15 +1094,62 @@ export class IssueDto implements IIssueDto {
         if (_data) {
             this.id = _data["id"];
             this.title = _data["title"];
+            this.categoryId = _data["categoryId"];
+            this.body = _data["body"];
+        }
+    }
+
+    static fromJS(data: any): CreateIssueTicketCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateIssueTicketCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["title"] = this.title;
+        data["categoryId"] = this.categoryId;
+        data["body"] = this.body;
+        return data; 
+    }
+}
+
+export interface ICreateIssueTicketCommand {
+    id?: number;
+    title?: string | undefined;
+    categoryId?: number;
+    body?: string | undefined;
+}
+
+export class UpdateIssueTicketCommand implements IUpdateIssueTicketCommand {
+    id?: number;
+    categoryId?: number;
+    stars?: number;
+    status?: ProgressStatus;
+
+    constructor(data?: IUpdateIssueTicketCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.categoryId = _data["categoryId"];
             this.stars = _data["stars"];
             this.status = _data["status"];
-            this.body = _data["body"];
         }
     }
 
-    static fromJS(data: any): IssueDto {
+    static fromJS(data: any): UpdateIssueTicketCommand {
         data = typeof data === 'object' ? data : {};
-        let result = new IssueDto();
+        let result = new UpdateIssueTicketCommand();
         result.init(data);
         return result;
     }
@@ -369,114 +1157,72 @@ export class IssueDto implements IIssueDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["title"] = this.title;
+        data["categoryId"] = this.categoryId;
         data["stars"] = this.stars;
         data["status"] = this.status;
-        data["body"] = this.body;
         return data; 
     }
 }
 
-export interface IIssueDto {
+export interface IUpdateIssueTicketCommand {
     id?: number;
-    title?: string | undefined;
+    categoryId?: number;
     stars?: number;
-    status?: number;
-    body?: string | undefined;
-}
-
-export class CreateIssueCommand implements ICreateIssueCommand {
-    title?: string | undefined;
-    body?: string | undefined;
-
-    constructor(data?: ICreateIssueCommand) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.title = _data["title"];
-            this.body = _data["body"];
-        }
-    }
-
-    static fromJS(data: any): CreateIssueCommand {
-        data = typeof data === 'object' ? data : {};
-        let result = new CreateIssueCommand();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["title"] = this.title;
-        data["body"] = this.body;
-        return data; 
-    }
-}
-
-export interface ICreateIssueCommand {
-    title?: string | undefined;
-    body?: string | undefined;
-}
-
-export class UpdateIssueCommand implements IUpdateIssueCommand {
-    id?: number;
-    title?: string | undefined;
     status?: ProgressStatus;
-    body?: string | undefined;
-
-    constructor(data?: IUpdateIssueCommand) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.title = _data["title"];
-            this.status = _data["status"];
-            this.body = _data["body"];
-        }
-    }
-
-    static fromJS(data: any): UpdateIssueCommand {
-        data = typeof data === 'object' ? data : {};
-        let result = new UpdateIssueCommand();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["title"] = this.title;
-        data["status"] = this.status;
-        data["body"] = this.body;
-        return data; 
-    }
-}
-
-export interface IUpdateIssueCommand {
-    id?: number;
-    title?: string | undefined;
-    status?: ProgressStatus;
-    body?: string | undefined;
 }
 
 export enum ProgressStatus {
     NotAnswered = 0,
     InDiscussion = 1,
     Answered = 2,
+}
+
+export class UpdateIssueTicketDetailsCommand implements IUpdateIssueTicketDetailsCommand {
+    id?: number;
+    title?: string | undefined;
+    categoryId?: number;
+    body?: string | undefined;
+
+    constructor(data?: IUpdateIssueTicketDetailsCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.title = _data["title"];
+            this.categoryId = _data["categoryId"];
+            this.body = _data["body"];
+        }
+    }
+
+    static fromJS(data: any): UpdateIssueTicketDetailsCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateIssueTicketDetailsCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["title"] = this.title;
+        data["categoryId"] = this.categoryId;
+        data["body"] = this.body;
+        return data; 
+    }
+}
+
+export interface IUpdateIssueTicketDetailsCommand {
+    id?: number;
+    title?: string | undefined;
+    categoryId?: number;
+    body?: string | undefined;
 }
 
 export interface FileResponse {

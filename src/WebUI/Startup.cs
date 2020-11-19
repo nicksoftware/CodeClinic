@@ -58,7 +58,7 @@ namespace CodeClinic.WebUI
 
             services.AddOpenApiDocument(configure =>
             {
-                configure.Title = "CodeClinic API";
+                configure.Title = "Code Clinic API";
                 configure.AddSecurity("JWT", Enumerable.Empty<string>(), new OpenApiSecurityScheme
                 {
                     Type = OpenApiSecuritySchemeType.ApiKey,

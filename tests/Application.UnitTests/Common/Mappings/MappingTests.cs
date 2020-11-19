@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CodeClinic.Application.Categories.Queries.GetCategoryList;
 using CodeClinic.Application.Common.Mappings;
 using CodeClinic.Application.Issues.Queries.GetIssueList;
 using CodeClinic.Domain.Entities;
@@ -29,7 +30,8 @@ namespace CodeClinic.Application.UnitTests.Common.Mappings
         }
         
         [Test]
-        [TestCase(typeof(Issue), typeof(IssueDto))]
+        [TestCase(typeof(IssueTicket), typeof(IssueTicketDto))]
+        [TestCase(typeof(Category), typeof(CategoryDto))]
         public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination)
         {
             var instance = Activator.CreateInstance(source);

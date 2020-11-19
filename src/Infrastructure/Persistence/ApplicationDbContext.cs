@@ -30,7 +30,8 @@ namespace CodeClinic.Infrastructure.Persistence
             _dateTime = dateTime;
         }
 
-        public DbSet<Issue> Issues { get  ; set ; }
+        public DbSet<IssueTicket> IssueTickets { get  ; set ; }
+        public DbSet<Category> Categories {get; set ; }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
