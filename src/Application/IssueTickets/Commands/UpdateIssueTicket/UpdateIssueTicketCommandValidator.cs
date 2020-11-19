@@ -1,4 +1,5 @@
 ﻿using CodeClinic.Application.Common.Interfaces;
+using CodeClinic.Application.Common.Models;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using System.Threading;
@@ -17,14 +18,15 @@ namespace CodeClinic.Application.IssueTickets.Commands.UpdateIssueTicket
             public UpdateIssueTicketCommandValidator(IApplicationDbContext context)
             {
                 RuleFor(s => s.Stars)
-                    .GreaterThanOrEqualTo(0).NotNull().NotEmpty()
+                    .GreaterThanOrEqualTo(0).NotNull().NotEmpty().WithErrorCode(ErrorCode.BadRequest)
                     .WithMessage("Star Rating Cannot be less than Zero");
 
                 RuleFor(a => a.Status)
-                    .NotNull().NotEmpty()
+                    .NotNull().NotEmpty().WithErrorCode(ErrorCode.BadRequest)
                     .WithMessage("Status cannot be null or empty");
 
-                RuleFor(c => c.CategoryId).NotNull().GreaterThan(0).MustAsync(HaveAnExistingCategory)
+                RuleFor(c => c.CategoryId).NotNull().GreaterThan(0)
+                    .MustAsync(HaveAnExistingCategory).WithErrorCode(ErrorCode.NotFound)
          .WithMessage("Choose a Category that exists in the system");
                 _context = context;
             }

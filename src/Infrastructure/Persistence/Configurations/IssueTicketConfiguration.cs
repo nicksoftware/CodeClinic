@@ -14,6 +14,14 @@ namespace CodeClinic.Infrastructure.Persistence.Configurations
             builder.Property(t => t.Title)
                 .HasMaxLength(200)
                 .IsRequired();
+
+            builder.HasOne(c => c.Category)
+                .WithMany(it => it.IssueTickets)
+                .HasConstraintName("CategoryIssueTickets")
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasMany(d => d.Comments)
+                .WithOne(it => it.IssueTicket);
         }
     }
 }
