@@ -19,7 +19,7 @@ export interface ICategoriesClient {
     create(command: CreateCategoryCommand): Observable<number>;
     getCategoryById(id: number): Observable<CategoryDetailVm>;
     update(id: string, command: UpdateCategoryCommand): Observable<FileResponse>;
-    delete(id: string, command: DeleteCategoryCommand): Observable<FileResponse>;
+    delete(id: number): Observable<FileResponse>;
 }
 
 @Injectable({
@@ -239,21 +239,17 @@ export class CategoriesClient implements ICategoriesClient {
         return _observableOf<FileResponse>(<any>null);
     }
 
-    delete(id: string, command: DeleteCategoryCommand): Observable<FileResponse> {
+    delete(id: number): Observable<FileResponse> {
         let url_ = this.baseUrl + "/api/Categories/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(command);
-
         let options_ : any = {
-            body: content_,
             observe: "response",
             responseType: "blob",			
             headers: new HttpHeaders({
-                "Content-Type": "application/json", 
                 "Accept": "application/octet-stream"
             })
         };
@@ -296,7 +292,7 @@ export class CategoriesClient implements ICategoriesClient {
 export interface IIssueTicketsClient {
     getAll(): Observable<IssueTicketListVm>;
     create(command: CreateIssueTicketCommand): Observable<number>;
-    getIssueTicketById(id: number): Observable<IssueTicketDto>;
+    getIssueTicketById(id: number): Observable<IssueTicketDetailVm>;
     update(id: number, command: UpdateIssueTicketCommand): Observable<FileResponse>;
     delete(id: number): Observable<FileResponse>;
     updateDetails(id: number | undefined, command: UpdateIssueTicketDetailsCommand): Observable<FileResponse>;
@@ -415,7 +411,7 @@ export class IssueTicketsClient implements IIssueTicketsClient {
         return _observableOf<number>(<any>null);
     }
 
-    getIssueTicketById(id: number): Observable<IssueTicketDto> {
+    getIssueTicketById(id: number): Observable<IssueTicketDetailVm> {
         let url_ = this.baseUrl + "/api/IssueTickets/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -437,14 +433,14 @@ export class IssueTicketsClient implements IIssueTicketsClient {
                 try {
                     return this.processGetIssueTicketById(<any>response_);
                 } catch (e) {
-                    return <Observable<IssueTicketDto>><any>_observableThrow(e);
+                    return <Observable<IssueTicketDetailVm>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<IssueTicketDto>><any>_observableThrow(response_);
+                return <Observable<IssueTicketDetailVm>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetIssueTicketById(response: HttpResponseBase): Observable<IssueTicketDto> {
+    protected processGetIssueTicketById(response: HttpResponseBase): Observable<IssueTicketDetailVm> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
@@ -455,7 +451,7 @@ export class IssueTicketsClient implements IIssueTicketsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = IssueTicketDto.fromJS(resultData200);
+            result200 = IssueTicketDetailVm.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -463,7 +459,7 @@ export class IssueTicketsClient implements IIssueTicketsClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<IssueTicketDto>(<any>null);
+        return _observableOf<IssueTicketDetailVm>(<any>null);
     }
 
     update(id: number, command: UpdateIssueTicketCommand): Observable<FileResponse> {
@@ -603,6 +599,294 @@ export class IssueTicketsClient implements IIssueTicketsClient {
     }
 
     protected processUpdateDetails(response: HttpResponseBase): Observable<FileResponse> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<FileResponse>(<any>null);
+    }
+}
+
+export interface IReviewsClient {
+    getAll(issueTicketId: number): Observable<ReviewListVm>;
+    create(issueTicketId: number, command: CreateReviewCommand): Observable<FileResponse>;
+    getReviewById(issueTicketId: number, id: number): Observable<ReviewDto>;
+    update(id: number, issueTicketId: string, command: UpdateReviewCommand): Observable<FileResponse>;
+    delete(issueTicketId: number, id: number): Observable<FileResponse>;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class ReviewsClient implements IReviewsClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    getAll(issueTicketId: number): Observable<ReviewListVm> {
+        let url_ = this.baseUrl + "/api/issueTickets/{issueTicketId}/Reviews";
+        if (issueTicketId === undefined || issueTicketId === null)
+            throw new Error("The parameter 'issueTicketId' must be defined.");
+        url_ = url_.replace("{issueTicketId}", encodeURIComponent("" + issueTicketId)); 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<ReviewListVm>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ReviewListVm>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<ReviewListVm> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ReviewListVm.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ReviewListVm>(<any>null);
+    }
+
+    create(issueTicketId: number, command: CreateReviewCommand): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/api/issueTickets/{issueTicketId}/Reviews";
+        if (issueTicketId === undefined || issueTicketId === null)
+            throw new Error("The parameter 'issueTicketId' must be defined.");
+        url_ = url_.replace("{issueTicketId}", encodeURIComponent("" + issueTicketId)); 
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+                "Accept": "application/octet-stream"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<FileResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<FileResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<FileResponse> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<FileResponse>(<any>null);
+    }
+
+    getReviewById(issueTicketId: number, id: number): Observable<ReviewDto> {
+        let url_ = this.baseUrl + "/api/issueTickets/{issueTicketId}/Reviews/{id}";
+        if (issueTicketId === undefined || issueTicketId === null)
+            throw new Error("The parameter 'issueTicketId' must be defined.");
+        url_ = url_.replace("{issueTicketId}", encodeURIComponent("" + issueTicketId)); 
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetReviewById(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetReviewById(<any>response_);
+                } catch (e) {
+                    return <Observable<ReviewDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ReviewDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetReviewById(response: HttpResponseBase): Observable<ReviewDto> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ReviewDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ReviewDto>(<any>null);
+    }
+
+    update(id: number, issueTicketId: string, command: UpdateReviewCommand): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/api/issueTickets/{issueTicketId}/Reviews/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
+        if (issueTicketId === undefined || issueTicketId === null)
+            throw new Error("The parameter 'issueTicketId' must be defined.");
+        url_ = url_.replace("{issueTicketId}", encodeURIComponent("" + issueTicketId)); 
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+                "Accept": "application/octet-stream"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(<any>response_);
+                } catch (e) {
+                    return <Observable<FileResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<FileResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<FileResponse> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<FileResponse>(<any>null);
+    }
+
+    delete(issueTicketId: number, id: number): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/api/issueTickets/{issueTicketId}/Reviews/{id}";
+        if (issueTicketId === undefined || issueTicketId === null)
+            throw new Error("The parameter 'issueTicketId' must be defined.");
+        url_ = url_.replace("{issueTicketId}", encodeURIComponent("" + issueTicketId)); 
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "application/octet-stream"
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<FileResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<FileResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<FileResponse> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
@@ -943,42 +1227,6 @@ export interface IUpdateCategoryCommand {
     description?: string | undefined;
 }
 
-export class DeleteCategoryCommand implements IDeleteCategoryCommand {
-    id?: number;
-
-    constructor(data?: IDeleteCategoryCommand) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-        }
-    }
-
-    static fromJS(data: any): DeleteCategoryCommand {
-        data = typeof data === 'object' ? data : {};
-        let result = new DeleteCategoryCommand();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        return data; 
-    }
-}
-
-export interface IDeleteCategoryCommand {
-    id?: number;
-}
-
 export class IssueTicketListVm implements IIssueTicketListVm {
     progressStatuses?: ProgressStatusDto[] | undefined;
     issues?: IssueTicketDto[] | undefined;
@@ -1073,6 +1321,132 @@ export class ProgressStatusDto implements IProgressStatusDto {
 export interface IProgressStatusDto {
     value?: number;
     name?: string | undefined;
+}
+
+export class IssueTicketDetailVm implements IIssueTicketDetailVm {
+    categoryId?: number;
+    issueTicketId?: number;
+    title?: string | undefined;
+    stars?: number;
+    body?: string | undefined;
+    status?: ProgressStatus;
+    categoryName?: string | undefined;
+    reviews?: ReviewDto[] | undefined;
+
+    constructor(data?: IIssueTicketDetailVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.categoryId = _data["categoryId"];
+            this.issueTicketId = _data["issueTicketId"];
+            this.title = _data["title"];
+            this.stars = _data["stars"];
+            this.body = _data["body"];
+            this.status = _data["status"];
+            this.categoryName = _data["categoryName"];
+            if (Array.isArray(_data["reviews"])) {
+                this.reviews = [] as any;
+                for (let item of _data["reviews"])
+                    this.reviews!.push(ReviewDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): IssueTicketDetailVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new IssueTicketDetailVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["categoryId"] = this.categoryId;
+        data["issueTicketId"] = this.issueTicketId;
+        data["title"] = this.title;
+        data["stars"] = this.stars;
+        data["body"] = this.body;
+        data["status"] = this.status;
+        data["categoryName"] = this.categoryName;
+        if (Array.isArray(this.reviews)) {
+            data["reviews"] = [];
+            for (let item of this.reviews)
+                data["reviews"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IIssueTicketDetailVm {
+    categoryId?: number;
+    issueTicketId?: number;
+    title?: string | undefined;
+    stars?: number;
+    body?: string | undefined;
+    status?: ProgressStatus;
+    categoryName?: string | undefined;
+    reviews?: ReviewDto[] | undefined;
+}
+
+export enum ProgressStatus {
+    NotAnswered = 0,
+    InDiscussion = 1,
+    Answered = 2,
+}
+
+export class ReviewDto implements IReviewDto {
+    reviewId?: number;
+    issueTicketId?: number;
+    title?: string | undefined;
+    description?: string | undefined;
+
+    constructor(data?: IReviewDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.reviewId = _data["reviewId"];
+            this.issueTicketId = _data["issueTicketId"];
+            this.title = _data["title"];
+            this.description = _data["description"];
+        }
+    }
+
+    static fromJS(data: any): ReviewDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ReviewDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["reviewId"] = this.reviewId;
+        data["issueTicketId"] = this.issueTicketId;
+        data["title"] = this.title;
+        data["description"] = this.description;
+        return data; 
+    }
+}
+
+export interface IReviewDto {
+    reviewId?: number;
+    issueTicketId?: number;
+    title?: string | undefined;
+    description?: string | undefined;
 }
 
 export class CreateIssueTicketCommand implements ICreateIssueTicketCommand {
@@ -1171,12 +1545,6 @@ export interface IUpdateIssueTicketCommand {
     status?: ProgressStatus;
 }
 
-export enum ProgressStatus {
-    NotAnswered = 0,
-    InDiscussion = 1,
-    Answered = 2,
-}
-
 export class UpdateIssueTicketDetailsCommand implements IUpdateIssueTicketDetailsCommand {
     id?: number;
     title?: string | undefined;
@@ -1223,6 +1591,142 @@ export interface IUpdateIssueTicketDetailsCommand {
     title?: string | undefined;
     categoryId?: number;
     body?: string | undefined;
+}
+
+export class ReviewListVm implements IReviewListVm {
+    items?: ReviewDto[] | undefined;
+
+    constructor(data?: IReviewListVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(ReviewDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): ReviewListVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new ReviewListVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IReviewListVm {
+    items?: ReviewDto[] | undefined;
+}
+
+export class CreateReviewCommand implements ICreateReviewCommand {
+    issueTicketId?: number;
+    title?: string | undefined;
+    description?: string | undefined;
+
+    constructor(data?: ICreateReviewCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.issueTicketId = _data["issueTicketId"];
+            this.title = _data["title"];
+            this.description = _data["description"];
+        }
+    }
+
+    static fromJS(data: any): CreateReviewCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateReviewCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["issueTicketId"] = this.issueTicketId;
+        data["title"] = this.title;
+        data["description"] = this.description;
+        return data; 
+    }
+}
+
+export interface ICreateReviewCommand {
+    issueTicketId?: number;
+    title?: string | undefined;
+    description?: string | undefined;
+}
+
+export class UpdateReviewCommand implements IUpdateReviewCommand {
+    issueTicketId?: number;
+    reviewId?: number;
+    title?: string | undefined;
+    description?: string | undefined;
+
+    constructor(data?: IUpdateReviewCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.issueTicketId = _data["issueTicketId"];
+            this.reviewId = _data["reviewId"];
+            this.title = _data["title"];
+            this.description = _data["description"];
+        }
+    }
+
+    static fromJS(data: any): UpdateReviewCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateReviewCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["issueTicketId"] = this.issueTicketId;
+        data["reviewId"] = this.reviewId;
+        data["title"] = this.title;
+        data["description"] = this.description;
+        return data; 
+    }
+}
+
+export interface IUpdateReviewCommand {
+    issueTicketId?: number;
+    reviewId?: number;
+    title?: string | undefined;
+    description?: string | undefined;
 }
 
 export interface FileResponse {

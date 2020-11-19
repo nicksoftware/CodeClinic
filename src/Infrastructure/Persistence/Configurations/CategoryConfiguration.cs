@@ -13,6 +13,11 @@ namespace CodeClinic.Infrastructure.Persistence.Configurations
                 .IsRequired();
             builder.Property(d => d.Description)
                 .HasMaxLength(500);
+
+
+            builder.HasMany(it => it.IssueTickets)
+                .WithOne(x => x.Category)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

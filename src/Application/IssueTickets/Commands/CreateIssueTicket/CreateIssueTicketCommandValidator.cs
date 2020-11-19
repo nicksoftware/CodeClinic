@@ -16,9 +16,13 @@ namespace CodeClinic.Application.TodoItems.Commands.UpdateTodoItem
             
             RuleFor(v => v.Title)
                 .MaximumLength(200)
-                .NotEmpty().WithMessage("Title cannot be longer than 200 characters");
+                .NotEmpty()
+                .WithMessage("Title cannot be longer than 200 characters");
 
-            RuleFor(c => c.CategoryId).NotNull().GreaterThan(0).MustAsync(HaveAnExistingCategory)
+            RuleFor(c => c.CategoryId)
+                .NotNull()
+                .GreaterThan(0)
+                .MustAsync(HaveAnExistingCategory)
                 .WithMessage("Choose a Category that exists in the system");
             _context = context;
         }

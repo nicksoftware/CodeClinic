@@ -23,6 +23,8 @@ namespace CodeClinic.Application.Issues.Queries.GetIssueList
         public string LastModifiedBy { get; set; }
 
         public DateTime? LastModified { get; set; }
+
+
         public void Mapping(Profile profile)
         {
             profile.CreateMap<IssueTicket, IssueTicketDto>()

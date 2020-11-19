@@ -2,25 +2,30 @@
 
 namespace CodeClinic.Application.Common.Exceptions
 {
-    public class NotFoundException : Exception
+    public class PostException : Exception
     {
-        public NotFoundException()
+        public PostException()
             : base()
         {
+
+
         }
 
-        public NotFoundException(string message)
+        public PostException(string message)
             : base(message)
         {
+
+
         }
 
-        public NotFoundException(string message, Exception innerException)
-            : base(message, innerException)
+
+        public PostException(string name, Exception innerException)
+            : base(name?? $"Failed to create entity  \"{name}\" " , innerException)
         {
         }
 
-        public NotFoundException(string name, object key)
-            : base($"Entity \"{name}\" ({key}) was not found.")
+        public PostException(string name, string reason)
+            : base($"Failed to create entity  \"{name}\" because {reason}")
         {
         }
     }

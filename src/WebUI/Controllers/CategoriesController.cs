@@ -3,6 +3,7 @@ using CodeClinic.Application.Categories.Commands.DeleteCategory;
 using CodeClinic.Application.Categories.Commands.UpdateCategory;
 using CodeClinic.Application.Categories.Queries.GetCategory;
 using CodeClinic.Application.Categories.Queries.GetCategoryList;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -26,6 +27,8 @@ namespace CodeClinic.WebUI.Controllers
             return await Mediator.Send(new GetCategoryDetailQuery { Id = id });
         }
 
+
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<int>> Create(CreateCategoryCommand command)
         {
@@ -42,9 +45,9 @@ namespace CodeClinic.WebUI.Controllers
 
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(DeleteCategoryCommand command)
+        public async Task<ActionResult> Delete(int id)
         {
-            await Mediator.Send(command);
+            await Mediator.Send(new DeleteCategoryCommand { Id =id});
 
             return NoContent();
         }

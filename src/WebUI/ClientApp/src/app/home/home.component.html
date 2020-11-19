@@ -1,44 +1,27 @@
+<table *ngIf="issuesTicketList"
+ class="table table-bordered" width="100%" cellspacing="0">
 
 
-<div class="container">
-  <div class="row">
-    <div class="col-md-12">
-      <h3>Welcome to the Code Clinic</h3>
-      <hr/>
-    </div>
-    <div class="col-md-12">
-      <ul class="list-group" *ngIf="issuesTicketList">
-        <li *ngFor="let ticket of issuesTicketList"
-            class="list-group-item">
-          <div class="row">
-            <div class="col">
-              {{ticket.title}}
-            </div>
-            <div>
-              <button class="btn btn-success mx-2" (click)="onIssueTicketClick(modalTemplate,ticket)">Diagnose</button>
-            </div>
-          </div>
-
-          <ng-template #modalTemplate>
-            <div class="modal-header">
-              <h4 class="modal-title pull-left">{{ticket.title}}</h4>
-              <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
-                <span aria-hidden="true">×</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <h4>Issue Ticket Details</h4>
-
-              {{ticket.body}}
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" (click)="modalRef.hide()">Close</button>
-            </div>
-          </ng-template>
-
-        </li>
-      </ul>
-    </div>
-  </div>
-
-</div>
+  <thead>
+    <tr>
+      <th>Issue Ticket</th>
+      <th>Description</th>
+      <th>Category</th>
+      <th>Stars</th>
+      <th>Date Created</th>
+      <th>Issue Status</th>
+      <th>Action</th>
+     </tr>
+  </thead> 
+  <tbody>
+    <tr *ngFor="let ticket of issuesTicketList">
+      <td>{{ ticket.title | summary:30 }}</td>
+      <td>{{ ticket.body | summary:60 }}</td>
+      <td>{{ ticket.categoryName }}</td>
+      <td>{{ ticket.stars  }}</td>
+      <td>{{ ticket.dateCreated | date:'mediumDate' }}</td>
+      <td>{{  ticket.status }}</td>
+      <td>  <button >Do sometihng</button></td>
+    </tr>
+  </tbody>  
+</table>

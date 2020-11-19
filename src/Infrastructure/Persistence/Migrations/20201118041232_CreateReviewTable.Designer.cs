@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CodeClinic.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201116080757_EmptyMigration")]
-    partial class EmptyMigration
+    [Migration("20201118041232_CreateReviewTable")]
+    partial class CreateReviewTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -95,6 +95,42 @@ namespace CodeClinic.Infrastructure.Persistence.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("IssueTickets");
+                });
+
+            modelBuilder.Entity("CodeClinic.Domain.Entities.Review", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("IssueTicketId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IssueTicketId");
+
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("CodeClinic.Infrastructure.Identity.ApplicationUser", b =>
@@ -384,6 +420,16 @@ namespace CodeClinic.Infrastructure.Persistence.Migrations
                     b.HasOne("CodeClinic.Domain.Entities.Category", "Category")
                         .WithMany("IssueTickets")
                         .HasForeignKey("CategoryId")
+                        .HasConstraintName("CategoryIssueTickets")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("CodeClinic.Domain.Entities.Review", b =>
+                {
+                    b.HasOne("CodeClinic.Domain.Entities.IssueTicket", "IssueTicket")
+                        .WithMany("Reviews")
+                        .HasForeignKey("IssueTicketId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

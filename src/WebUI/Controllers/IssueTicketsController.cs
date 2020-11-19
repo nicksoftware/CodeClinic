@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using CodeClinic.Application.IssueTickets.Commands.UpdateIssueTicket;
 using CodeClinic.Application.IssueItems.Queries.GetIssueDetail;
+using CodeClinic.Application.IssueTickets.Queries.GetIssueDetail;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -21,12 +22,15 @@ namespace CodeClinic.WebUI.Controllers
             return await Mediator.Send(new GetIssueTicketListQuery());
         }
 
+
+
         [HttpGet("{id}")]
-        public async Task<ActionResult<IssueTicketDto>> GetIssueTicketById(int id)
+        public async Task<ActionResult<IssueTicketDetailVm>> GetIssueTicketById(int id)
         {
           
             return await Mediator.Send(new GetIssueTicketDetailQuery { Id = id });
         }
+
 
         [HttpPost]
         public async Task<ActionResult<int>> Create(CreateIssueTicketCommand command)
