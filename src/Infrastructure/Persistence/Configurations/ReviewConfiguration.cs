@@ -7,9 +7,9 @@ using System.Text;
 
 namespace CodeClinic.Infrastructure.Persistence.Configurations
 {
-    class ReviewConfiguration : IEntityTypeConfiguration<Review>
+    class CommentConfiguration : IEntityTypeConfiguration<Comment>
     {
-        public void Configure(EntityTypeBuilder<Review> builder)
+        public void Configure(EntityTypeBuilder<Comment> builder)
         {
 
             builder.Property(t => t.Title);
@@ -19,7 +19,7 @@ namespace CodeClinic.Infrastructure.Persistence.Configurations
 
 
             builder.HasOne(x => x.IssueTicket)
-                .WithMany(d => d.Reviews)
+                .WithMany(d => d.Comments)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasForeignKey(k => k.IssueTicketId)
                 .IsRequired();

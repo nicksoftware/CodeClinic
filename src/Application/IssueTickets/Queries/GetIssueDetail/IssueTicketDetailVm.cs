@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using CodeClinic.Application.Common.Mappings;
-using CodeClinic.Application.Reviews.Query.GetReviewList;
+using CodeClinic.Application.Comments.Query.GetCommentList;
 using CodeClinic.Domain.Entities;
 using CodeClinic.Domain.Enums;
 using System;
@@ -20,7 +20,7 @@ namespace CodeClinic.Application.IssueTickets.Queries.GetIssueDetail
         public ProgressStatus Status { get; set; }
         public string CategoryName { get; set; }
 
-        public IList<ReviewDto> Reviews { get; set; } = new List<ReviewDto>();
+        public IList<CommentDto> Comments { get; set; } = new List<CommentDto>();
 
 
         public void Mapping(Profile profile)

@@ -10,7 +10,7 @@ namespace CodeClinic.Application.Common.Interfaces
 
         DbSet<IssueTicket> IssueTickets {get;set;}
         DbSet<Category> Categories { get; set; }
-        DbSet<Review> Reviews { get; set; }
+        DbSet<Comment> Comments { get; set; }
 
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);

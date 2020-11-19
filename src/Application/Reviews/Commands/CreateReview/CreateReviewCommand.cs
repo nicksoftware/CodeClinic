@@ -8,9 +8,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CodeClinic.Application.Reviews.Commands.CreateReview
+namespace CodeClinic.Application.Comments.Commands.CreateComment
 {
-    public class CreateReviewCommand : IRequest<int>
+    public class CreateCommentCommand : IRequest<int>
     {
         public int IssueTicketId { get; set; }
         public string Title { get; set; }
@@ -19,28 +19,28 @@ namespace CodeClinic.Application.Reviews.Commands.CreateReview
     }
 
 
-    public class CreateReviewCommandHandler : ReviewCommandBaseHandler, IRequestHandler<CreateReviewCommand, int>
+    public class CreateCommentCommandHandler : CommentCommandBaseHandler, IRequestHandler<CreateCommentCommand, int>
     {
-        public CreateReviewCommandHandler(IApplicationDbContext context) : base(context) { }
+        public CreateCommentCommandHandler(IApplicationDbContext context) : base(context) { }
 
-        public async Task<int> Handle(CreateReviewCommand request, CancellationToken cancellationToken)
+        public async Task<int> Handle(CreateCommentCommand request, CancellationToken cancellationToken)
         {
             var issueTicket = await _context.IssueTickets.FindAsync(request.IssueTicketId);
 
             if (issueTicket == null)
                 throw 
-                    new PostException(nameof(Review),
+                    new PostException(nameof(Comment),
                     new NotFoundException($"The Depend Entity '{nameof(IssueTicket)}'" +
                     $" with Id {request.IssueTicketId} was not found"));
                
-            var entity = new Review
+            var entity = new Comment
             {
                 IssueTicketId = request.IssueTicketId,  
                 Title = request.Title,
                 Description = request.Description
             };
 
-            _context.Reviews.Add(entity);
+            _context.Comments.Add(entity);
 
             await _context.SaveChangesAsync(cancellationToken);
             return entity.Id;

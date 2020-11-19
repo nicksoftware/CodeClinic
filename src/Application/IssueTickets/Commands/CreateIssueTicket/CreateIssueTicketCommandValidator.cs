@@ -1,5 +1,6 @@
 ﻿using Application.Issues.Commands.CreateIssue;
 using CodeClinic.Application.Common.Interfaces;
+using CodeClinic.Application.Common.Models;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using System.Threading;
@@ -16,13 +17,13 @@ namespace CodeClinic.Application.TodoItems.Commands.UpdateTodoItem
             
             RuleFor(v => v.Title)
                 .MaximumLength(200)
-                .NotEmpty()
+                .NotEmpty().WithErrorCode(ErrorCode.BadRequest)
                 .WithMessage("Title cannot be longer than 200 characters");
 
             RuleFor(c => c.CategoryId)
                 .NotNull()
-                .GreaterThan(0)
-                .MustAsync(HaveAnExistingCategory)
+                .GreaterThan(0) 
+                .MustAsync(HaveAnExistingCategory).WithErrorCode(ErrorCode.NotFound)
                 .WithMessage("Choose a Category that exists in the system");
             _context = context;
         }

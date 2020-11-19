@@ -3,13 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CodeClinic.Application.Reviews.Commands.UpdateReview
+namespace CodeClinic.Application.Comments.Commands.UpdateComment
 {
-    class UpdateReviewCommandValidator : AbstractValidator<UpdateReviewCommand>
+    class UpdateCommentCommandValidator : AbstractValidator<UpdateCommentCommand>
     {
-        public UpdateReviewCommandValidator()
+        public UpdateCommentCommandValidator()
         {
-            RuleFor(i => i.ReviewId).NotEmpty()
+            RuleFor(i => i.CommentId).NotEmpty()
                 .NotNull();
 
             RuleFor(t => t.IssueTicketId)

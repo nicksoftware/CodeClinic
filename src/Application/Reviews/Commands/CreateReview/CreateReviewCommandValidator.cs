@@ -4,11 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CodeClinic.Application.Reviews.Commands.CreateReview
+namespace CodeClinic.Application.Comments.Commands.CreateComment
 {
-    class CreateReviewCommandValidator: AbstractValidator<CreateReviewCommand>
+    class CreateCommentCommandValidator: AbstractValidator<CreateCommentCommand>
     {
-        public CreateReviewCommandValidator()
+        public CreateCommentCommandValidator()
         {
             RuleFor(t => t.IssueTicketId)
                 .NotEmpty().NotNull()

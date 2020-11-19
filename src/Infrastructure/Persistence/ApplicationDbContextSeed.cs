@@ -51,9 +51,9 @@ namespace CodeClinic.Infrastructure.Persistence
                             CategoryId = 1,
                             Status = Domain.Enums.ProgressStatus.InDiscussion,
                             Body = "I was Updating to the latest version of entity framework and everything went west of westeros",
-                            Reviews = new List<Review>
+                            Comments = new List<Comment>
                             {
-                                new Review
+                                new Comment
                                 {
                                     Created = DateTime.Now,
                                     CreatedBy = _defaultUser.Id,
@@ -71,9 +71,9 @@ namespace CodeClinic.Infrastructure.Persistence
                             Title = "My Xamarin 📱 Application Has a Bug ,I cant Fix",
                             CategoryId = 2,
                             Body = "I  cant seem to create a new page ",
-                            Reviews = new List<Review>
+                            Comments = new List<Comment>
                             {
-                                new Review
+                                new Comment
                                 {   
                                     Created = DateTime.Now,
                                     CreatedBy = _defaultUser.Id,

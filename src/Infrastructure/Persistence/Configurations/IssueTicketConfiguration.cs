@@ -20,7 +20,7 @@ namespace CodeClinic.Infrastructure.Persistence.Configurations
                 .HasConstraintName("CategoryIssueTickets")
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasMany(d => d.Reviews)
+            builder.HasMany(d => d.Comments)
                 .WithOne(it => it.IssueTicket);
         }
     }

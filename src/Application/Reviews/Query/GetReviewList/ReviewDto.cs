@@ -2,11 +2,11 @@
 using CodeClinic.Application.Common.Mappings;
 using CodeClinic.Domain.Entities;
 
-namespace CodeClinic.Application.Reviews.Query.GetReviewList
+namespace CodeClinic.Application.Comments.Query.GetCommentList
 {
-    public class ReviewDto : IMapFrom<Review>
+    public class CommentDto : IMapFrom<Comment>
     {
-        public int ReviewId { get; set; }
+        public int CommentId { get; set; }
         public int IssueTicketId { get; set; }
 
         public string Title { get; set; }
@@ -14,8 +14,8 @@ namespace CodeClinic.Application.Reviews.Query.GetReviewList
         public string Description { get; set; }
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<Review, ReviewDto>()
-                .ForMember(i => i.ReviewId, opt => opt.MapFrom(d => d.Id));
+            profile.CreateMap<Comment, CommentDto>()
+                .ForMember(i => i.CommentId, opt => opt.MapFrom(d => d.Id));
         }
 
     }

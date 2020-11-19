@@ -15,6 +15,6 @@ namespace CodeClinic.Domain.Entities
         public ProgressStatus Status { get; set; }
         public Category Category { get; set; }
 
-        public IList<Review> Reviews { get;  set; } = new List<Review>();
+        public IList<Comment> Comments { get;  set; } = new List<Comment>();
     }
 }

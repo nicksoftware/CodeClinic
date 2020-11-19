@@ -4,13 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CodeClinic.Application.Reviews.Commands
+namespace CodeClinic.Application.Comments.Commands
 {
-    public class ReviewCommandBaseHandler
+    public class CommentCommandBaseHandler
     {
         protected readonly IApplicationDbContext _context;
 
-        public ReviewCommandBaseHandler(IApplicationDbContext context)
+        public CommentCommandBaseHandler(IApplicationDbContext context)
         {
             _context = context;
         }

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 
-namespace CodeClinic.Application.Reviews.Query.GetReviewList
+namespace CodeClinic.Application.Comments.Query.GetCommentList
 {
-    public  class ReviewListVm
+    public  class CommentListVm
     {
-        public List<ReviewDto> Items { get; set; }
+        public List<CommentDto> Items { get; set; }
     }
 }

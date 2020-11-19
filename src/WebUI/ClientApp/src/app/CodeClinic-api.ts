@@ -619,18 +619,18 @@ export class IssueTicketsClient implements IIssueTicketsClient {
     }
 }
 
-export interface IReviewsClient {
-    getAll(issueTicketId: number): Observable<ReviewListVm>;
-    create(issueTicketId: number, command: CreateReviewCommand): Observable<FileResponse>;
-    getReviewById(issueTicketId: number, id: number): Observable<ReviewDto>;
-    update(id: number, issueTicketId: string, command: UpdateReviewCommand): Observable<FileResponse>;
+export interface ICommentsClient {
+    getAll(issueTicketId: number): Observable<CommentListVm>;
+    create(issueTicketId: number, command: CreateCommentCommand): Observable<FileResponse>;
+    getCommentById(issueTicketId: number, id: number): Observable<CommentDto>;
+    update(id: number, issueTicketId: string, command: UpdateCommentCommand): Observable<FileResponse>;
     delete(issueTicketId: number, id: number): Observable<FileResponse>;
 }
 
 @Injectable({
     providedIn: 'root'
 })
-export class ReviewsClient implements IReviewsClient {
+export class CommentsClient implements ICommentsClient {
     private http: HttpClient;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -640,8 +640,8 @@ export class ReviewsClient implements IReviewsClient {
         this.baseUrl = baseUrl ? baseUrl : "";
     }
 
-    getAll(issueTicketId: number): Observable<ReviewListVm> {
-        let url_ = this.baseUrl + "/api/issueTickets/{issueTicketId}/Reviews";
+    getAll(issueTicketId: number): Observable<CommentListVm> {
+        let url_ = this.baseUrl + "/api/issueTickets/{issueTicketId}/Comments";
         if (issueTicketId === undefined || issueTicketId === null)
             throw new Error("The parameter 'issueTicketId' must be defined.");
         url_ = url_.replace("{issueTicketId}", encodeURIComponent("" + issueTicketId)); 
@@ -662,14 +662,14 @@ export class ReviewsClient implements IReviewsClient {
                 try {
                     return this.processGetAll(<any>response_);
                 } catch (e) {
-                    return <Observable<ReviewListVm>><any>_observableThrow(e);
+                    return <Observable<CommentListVm>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<ReviewListVm>><any>_observableThrow(response_);
+                return <Observable<CommentListVm>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetAll(response: HttpResponseBase): Observable<ReviewListVm> {
+    protected processGetAll(response: HttpResponseBase): Observable<CommentListVm> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
@@ -680,7 +680,7 @@ export class ReviewsClient implements IReviewsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ReviewListVm.fromJS(resultData200);
+            result200 = CommentListVm.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -688,11 +688,11 @@ export class ReviewsClient implements IReviewsClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<ReviewListVm>(<any>null);
+        return _observableOf<CommentListVm>(<any>null);
     }
 
-    create(issueTicketId: number, command: CreateReviewCommand): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/api/issueTickets/{issueTicketId}/Reviews";
+    create(issueTicketId: number, command: CreateCommentCommand): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/api/issueTickets/{issueTicketId}/Comments";
         if (issueTicketId === undefined || issueTicketId === null)
             throw new Error("The parameter 'issueTicketId' must be defined.");
         url_ = url_.replace("{issueTicketId}", encodeURIComponent("" + issueTicketId)); 
@@ -744,8 +744,8 @@ export class ReviewsClient implements IReviewsClient {
         return _observableOf<FileResponse>(<any>null);
     }
 
-    getReviewById(issueTicketId: number, id: number): Observable<ReviewDto> {
-        let url_ = this.baseUrl + "/api/issueTickets/{issueTicketId}/Reviews/{id}";
+    getCommentById(issueTicketId: number, id: number): Observable<CommentDto> {
+        let url_ = this.baseUrl + "/api/issueTickets/{issueTicketId}/Comments/{id}";
         if (issueTicketId === undefined || issueTicketId === null)
             throw new Error("The parameter 'issueTicketId' must be defined.");
         url_ = url_.replace("{issueTicketId}", encodeURIComponent("" + issueTicketId)); 
@@ -763,20 +763,20 @@ export class ReviewsClient implements IReviewsClient {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetReviewById(response_);
+            return this.processGetCommentById(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGetReviewById(<any>response_);
+                    return this.processGetCommentById(<any>response_);
                 } catch (e) {
-                    return <Observable<ReviewDto>><any>_observableThrow(e);
+                    return <Observable<CommentDto>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<ReviewDto>><any>_observableThrow(response_);
+                return <Observable<CommentDto>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetReviewById(response: HttpResponseBase): Observable<ReviewDto> {
+    protected processGetCommentById(response: HttpResponseBase): Observable<CommentDto> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
@@ -787,7 +787,7 @@ export class ReviewsClient implements IReviewsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ReviewDto.fromJS(resultData200);
+            result200 = CommentDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -795,11 +795,11 @@ export class ReviewsClient implements IReviewsClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<ReviewDto>(<any>null);
+        return _observableOf<CommentDto>(<any>null);
     }
 
-    update(id: number, issueTicketId: string, command: UpdateReviewCommand): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/api/issueTickets/{issueTicketId}/Reviews/{id}";
+    update(id: number, issueTicketId: string, command: UpdateCommentCommand): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/api/issueTickets/{issueTicketId}/Comments/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
@@ -855,7 +855,7 @@ export class ReviewsClient implements IReviewsClient {
     }
 
     delete(issueTicketId: number, id: number): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/api/issueTickets/{issueTicketId}/Reviews/{id}";
+        let url_ = this.baseUrl + "/api/issueTickets/{issueTicketId}/Comments/{id}";
         if (issueTicketId === undefined || issueTicketId === null)
             throw new Error("The parameter 'issueTicketId' must be defined.");
         url_ = url_.replace("{issueTicketId}", encodeURIComponent("" + issueTicketId)); 
@@ -1331,7 +1331,7 @@ export class IssueTicketDetailVm implements IIssueTicketDetailVm {
     body?: string | undefined;
     status?: ProgressStatus;
     categoryName?: string | undefined;
-    reviews?: ReviewDto[] | undefined;
+    comments?: CommentDto[] | undefined;
 
     constructor(data?: IIssueTicketDetailVm) {
         if (data) {
@@ -1351,10 +1351,10 @@ export class IssueTicketDetailVm implements IIssueTicketDetailVm {
             this.body = _data["body"];
             this.status = _data["status"];
             this.categoryName = _data["categoryName"];
-            if (Array.isArray(_data["reviews"])) {
-                this.reviews = [] as any;
-                for (let item of _data["reviews"])
-                    this.reviews!.push(ReviewDto.fromJS(item));
+            if (Array.isArray(_data["comments"])) {
+                this.comments = [] as any;
+                for (let item of _data["comments"])
+                    this.comments!.push(CommentDto.fromJS(item));
             }
         }
     }
@@ -1375,10 +1375,10 @@ export class IssueTicketDetailVm implements IIssueTicketDetailVm {
         data["body"] = this.body;
         data["status"] = this.status;
         data["categoryName"] = this.categoryName;
-        if (Array.isArray(this.reviews)) {
-            data["reviews"] = [];
-            for (let item of this.reviews)
-                data["reviews"].push(item.toJSON());
+        if (Array.isArray(this.comments)) {
+            data["comments"] = [];
+            for (let item of this.comments)
+                data["comments"].push(item.toJSON());
         }
         return data; 
     }
@@ -1392,7 +1392,7 @@ export interface IIssueTicketDetailVm {
     body?: string | undefined;
     status?: ProgressStatus;
     categoryName?: string | undefined;
-    reviews?: ReviewDto[] | undefined;
+    comments?: CommentDto[] | undefined;
 }
 
 export enum ProgressStatus {
@@ -1401,13 +1401,13 @@ export enum ProgressStatus {
     Answered = 2,
 }
 
-export class ReviewDto implements IReviewDto {
-    reviewId?: number;
+export class CommentDto implements ICommentDto {
+    commentId?: number;
     issueTicketId?: number;
     title?: string | undefined;
     description?: string | undefined;
 
-    constructor(data?: IReviewDto) {
+    constructor(data?: ICommentDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1418,23 +1418,23 @@ export class ReviewDto implements IReviewDto {
 
     init(_data?: any) {
         if (_data) {
-            this.reviewId = _data["reviewId"];
+            this.commentId = _data["commentId"];
             this.issueTicketId = _data["issueTicketId"];
             this.title = _data["title"];
             this.description = _data["description"];
         }
     }
 
-    static fromJS(data: any): ReviewDto {
+    static fromJS(data: any): CommentDto {
         data = typeof data === 'object' ? data : {};
-        let result = new ReviewDto();
+        let result = new CommentDto();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["reviewId"] = this.reviewId;
+        data["commentId"] = this.commentId;
         data["issueTicketId"] = this.issueTicketId;
         data["title"] = this.title;
         data["description"] = this.description;
@@ -1442,8 +1442,8 @@ export class ReviewDto implements IReviewDto {
     }
 }
 
-export interface IReviewDto {
-    reviewId?: number;
+export interface ICommentDto {
+    commentId?: number;
     issueTicketId?: number;
     title?: string | undefined;
     description?: string | undefined;
@@ -1593,10 +1593,10 @@ export interface IUpdateIssueTicketDetailsCommand {
     body?: string | undefined;
 }
 
-export class ReviewListVm implements IReviewListVm {
-    items?: ReviewDto[] | undefined;
+export class CommentListVm implements ICommentListVm {
+    items?: CommentDto[] | undefined;
 
-    constructor(data?: IReviewListVm) {
+    constructor(data?: ICommentListVm) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1610,14 +1610,14 @@ export class ReviewListVm implements IReviewListVm {
             if (Array.isArray(_data["items"])) {
                 this.items = [] as any;
                 for (let item of _data["items"])
-                    this.items!.push(ReviewDto.fromJS(item));
+                    this.items!.push(CommentDto.fromJS(item));
             }
         }
     }
 
-    static fromJS(data: any): ReviewListVm {
+    static fromJS(data: any): CommentListVm {
         data = typeof data === 'object' ? data : {};
-        let result = new ReviewListVm();
+        let result = new CommentListVm();
         result.init(data);
         return result;
     }
@@ -1633,16 +1633,16 @@ export class ReviewListVm implements IReviewListVm {
     }
 }
 
-export interface IReviewListVm {
-    items?: ReviewDto[] | undefined;
+export interface ICommentListVm {
+    items?: CommentDto[] | undefined;
 }
 
-export class CreateReviewCommand implements ICreateReviewCommand {
+export class CreateCommentCommand implements ICreateCommentCommand {
     issueTicketId?: number;
     title?: string | undefined;
     description?: string | undefined;
 
-    constructor(data?: ICreateReviewCommand) {
+    constructor(data?: ICreateCommentCommand) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1659,9 +1659,9 @@ export class CreateReviewCommand implements ICreateReviewCommand {
         }
     }
 
-    static fromJS(data: any): CreateReviewCommand {
+    static fromJS(data: any): CreateCommentCommand {
         data = typeof data === 'object' ? data : {};
-        let result = new CreateReviewCommand();
+        let result = new CreateCommentCommand();
         result.init(data);
         return result;
     }
@@ -1675,19 +1675,19 @@ export class CreateReviewCommand implements ICreateReviewCommand {
     }
 }
 
-export interface ICreateReviewCommand {
+export interface ICreateCommentCommand {
     issueTicketId?: number;
     title?: string | undefined;
     description?: string | undefined;
 }
 
-export class UpdateReviewCommand implements IUpdateReviewCommand {
+export class UpdateCommentCommand implements IUpdateCommentCommand {
     issueTicketId?: number;
-    reviewId?: number;
+    commentId?: number;
     title?: string | undefined;
     description?: string | undefined;
 
-    constructor(data?: IUpdateReviewCommand) {
+    constructor(data?: IUpdateCommentCommand) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1699,15 +1699,15 @@ export class UpdateReviewCommand implements IUpdateReviewCommand {
     init(_data?: any) {
         if (_data) {
             this.issueTicketId = _data["issueTicketId"];
-            this.reviewId = _data["reviewId"];
+            this.commentId = _data["commentId"];
             this.title = _data["title"];
             this.description = _data["description"];
         }
     }
 
-    static fromJS(data: any): UpdateReviewCommand {
+    static fromJS(data: any): UpdateCommentCommand {
         data = typeof data === 'object' ? data : {};
-        let result = new UpdateReviewCommand();
+        let result = new UpdateCommentCommand();
         result.init(data);
         return result;
     }
@@ -1715,16 +1715,16 @@ export class UpdateReviewCommand implements IUpdateReviewCommand {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["issueTicketId"] = this.issueTicketId;
-        data["reviewId"] = this.reviewId;
+        data["commentId"] = this.commentId;
         data["title"] = this.title;
         data["description"] = this.description;
         return data; 
     }
 }
 
-export interface IUpdateReviewCommand {
+export interface IUpdateCommentCommand {
     issueTicketId?: number;
-    reviewId?: number;
+    commentId?: number;
     title?: string | undefined;
     description?: string | undefined;
 }

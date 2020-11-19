@@ -8,29 +8,29 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CodeClinic.Application.Reviews.Commands.DeleteReview
+namespace CodeClinic.Application.Comments.Commands.DeleteComment
 {
-    class DeleteReviewCommandValidator :AbstractValidator<DeleteReviewCommand>
+    class DeleteCommentCommandValidator :AbstractValidator<DeleteCommentCommand>
     {
         private readonly IApplicationDbContext _context;
 
-        public DeleteReviewCommandValidator(IApplicationDbContext context)
+        public DeleteCommentCommandValidator(IApplicationDbContext context)
         {
             _context = context;
         }
-        public DeleteReviewCommandValidator()
+        public DeleteCommentCommandValidator()
         {
             RuleFor(i => i.Id)
-                .NotEmpty().NotNull().WithMessage("Review Id is Required!");
+                .NotEmpty().NotNull().WithMessage("Comment Id is Required!");
 
             RuleFor(i => i.IssueTicketId).NotEmpty()
                 .MustAsync(MustBeInTheIssueTicket)
-                .WithMessage("Ticket does not contain review with given Id!");
+                .WithMessage("Ticket does not contain Comment with given Id!");
         }
 
-        public async Task<bool> MustBeInTheIssueTicket(DeleteReviewCommand request, int issueTickeId, CancellationToken cancellationToken)
+        public async Task<bool> MustBeInTheIssueTicket(DeleteCommentCommand request, int issueTickeId, CancellationToken cancellationToken)
         {
-            var ticket = await _context.IssueTickets.FirstOrDefaultAsync(i => i.Id == request.IssueTicketId && i.Reviews.FirstOrDefault(r => r.IssueTicketId == issueTickeId ) != null);
+            var ticket = await _context.IssueTickets.FirstOrDefaultAsync(i => i.Id == request.IssueTicketId && i.Comments.FirstOrDefault(r => r.IssueTicketId == issueTickeId ) != null);
             return ticket != null;
         }
     }

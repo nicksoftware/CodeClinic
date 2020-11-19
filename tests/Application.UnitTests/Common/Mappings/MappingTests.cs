@@ -2,7 +2,7 @@
 using CodeClinic.Application.Categories.Queries.GetCategoryList;
 using CodeClinic.Application.Common.Mappings;
 using CodeClinic.Application.Issues.Queries.GetIssueList;
-using CodeClinic.Application.Reviews.Query.GetReviewList;
+using CodeClinic.Application.Comments.Query.GetCommentList;
 using CodeClinic.Domain.Entities;
 using NUnit.Framework;
 using System;
@@ -33,7 +33,7 @@ namespace CodeClinic.Application.UnitTests.Common.Mappings
         [Test]
         [TestCase(typeof(IssueTicket), typeof(IssueTicketDto))]
         [TestCase(typeof(Category), typeof(CategoryDto))]
-        [TestCase(typeof(Review), typeof(ReviewDto))]
+        [TestCase(typeof(Comment), typeof(CommentDto))]
         public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination)
         {
             var instance = Activator.CreateInstance(source);

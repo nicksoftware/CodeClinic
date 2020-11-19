@@ -398,12 +398,12 @@
         ]
       }
     },
-    "/api/issueTickets/{issueTicketId}/Reviews": {
+    "/api/issueTickets/{issueTicketId}/Comments": {
       "get": {
         "tags": [
-          "Reviews"
+          "Comments"
         ],
-        "operationId": "Reviews_GetAll",
+        "operationId": "Comments_GetAll",
         "parameters": [
           {
             "name": "issueTicketId",
@@ -422,7 +422,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ReviewListVm"
+                  "$ref": "#/components/schemas/CommentListVm"
                 }
               }
             }
@@ -431,9 +431,9 @@
       },
       "post": {
         "tags": [
-          "Reviews"
+          "Comments"
         ],
-        "operationId": "Reviews_Create",
+        "operationId": "Comments_Create",
         "parameters": [
           {
             "name": "issueTicketId",
@@ -451,7 +451,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateReviewCommand"
+                "$ref": "#/components/schemas/CreateCommentCommand"
               }
             }
           },
@@ -473,12 +473,12 @@
         }
       }
     },
-    "/api/issueTickets/{issueTicketId}/Reviews/{id}": {
+    "/api/issueTickets/{issueTicketId}/Comments/{id}": {
       "get": {
         "tags": [
-          "Reviews"
+          "Comments"
         ],
-        "operationId": "Reviews_GetReviewById",
+        "operationId": "Comments_GetCommentById",
         "parameters": [
           {
             "name": "issueTicketId",
@@ -507,7 +507,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ReviewDto"
+                  "$ref": "#/components/schemas/CommentDto"
                 }
               }
             }
@@ -516,9 +516,9 @@
       },
       "put": {
         "tags": [
-          "Reviews"
+          "Comments"
         ],
-        "operationId": "Reviews_Update",
+        "operationId": "Comments_Update",
         "parameters": [
           {
             "name": "id",
@@ -545,7 +545,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateReviewCommand"
+                "$ref": "#/components/schemas/UpdateCommentCommand"
               }
             }
           },
@@ -568,9 +568,9 @@
       },
       "delete": {
         "tags": [
-          "Reviews"
+          "Comments"
         ],
-        "operationId": "Reviews_Delete",
+        "operationId": "Comments_Delete",
         "parameters": [
           {
             "name": "issueTicketId",
@@ -832,11 +832,11 @@
             "type": "string",
             "nullable": true
           },
-          "reviews": {
+          "comments": {
             "type": "array",
             "nullable": true,
             "items": {
-              "$ref": "#/components/schemas/ReviewDto"
+              "$ref": "#/components/schemas/CommentDto"
             }
           }
         }
@@ -855,11 +855,11 @@
           2
         ]
       },
-      "ReviewDto": {
+      "CommentDto": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "reviewId": {
+          "commentId": {
             "type": "integer",
             "format": "int32"
           },
@@ -942,7 +942,7 @@
           }
         }
       },
-      "ReviewListVm": {
+      "CommentListVm": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -950,12 +950,12 @@
             "type": "array",
             "nullable": true,
             "items": {
-              "$ref": "#/components/schemas/ReviewDto"
+              "$ref": "#/components/schemas/CommentDto"
             }
           }
         }
       },
-      "CreateReviewCommand": {
+      "CreateCommentCommand": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -973,7 +973,7 @@
           }
         }
       },
-      "UpdateReviewCommand": {
+      "UpdateCommentCommand": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -981,7 +981,7 @@
             "type": "integer",
             "format": "int32"
           },
-          "reviewId": {
+          "commentId": {
             "type": "integer",
             "format": "int32"
           },

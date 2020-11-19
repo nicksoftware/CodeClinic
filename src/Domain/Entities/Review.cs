@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CodeClinic.Domain.Entities
 {
-   public class Review :AuditableEntity
+   public class Comment :AuditableEntity
     {
 
         public int IssueTicketId { get; set; }

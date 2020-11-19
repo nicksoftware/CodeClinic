@@ -12,18 +12,18 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CodeClinic.Application.Reviews.Query.GetReviewList
+namespace CodeClinic.Application.Comments.Query.GetCommentList
 {
-    public class GetReviewListQuery : IRequest<ReviewListVm>
+    public class GetCommentListQuery : IRequest<CommentListVm>
     {
-        public GetReviewListQuery(int issueTicketId)
+        public GetCommentListQuery(int issueTicketId)
         {
             IssueTicketId = issueTicketId;
         }
         public int IssueTicketId { get; private set; }
     }
 
-    public class GetDiagnosisListQueryHandler : IRequestHandler<GetReviewListQuery, ReviewListVm>
+    public class GetDiagnosisListQueryHandler : IRequestHandler<GetCommentListQuery, CommentListVm>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -34,17 +34,17 @@ namespace CodeClinic.Application.Reviews.Query.GetReviewList
             _mapper = mapper;
         }
 
-        public async Task<ReviewListVm> Handle(GetReviewListQuery request, CancellationToken cancellationToken)
+        public async Task<CommentListVm> Handle(GetCommentListQuery request, CancellationToken cancellationToken)
         {
-            var diagnoses = await _context.Reviews.Where(it => it.IssueTicketId == request.IssueTicketId)
-        .ProjectTo<ReviewDto>(_mapper.ConfigurationProvider)
+            var diagnoses = await _context.Comments.Where(it => it.IssueTicketId == request.IssueTicketId)
+        .ProjectTo<CommentDto>(_mapper.ConfigurationProvider)
         .ToListAsync(cancellationToken);
 
 
             if (diagnoses == null)
-                throw new NotFoundException(nameof(Review), request.IssueTicketId);
+                throw new NotFoundException(nameof(Comment), request.IssueTicketId);
             
-            ReviewListVm vm = new ReviewListVm
+            CommentListVm vm = new CommentListVm
             {
                 Items = diagnoses
             };
@@ -54,7 +54,7 @@ namespace CodeClinic.Application.Reviews.Query.GetReviewList
                 return vm;
             }
 
-            return new ReviewListVm();
+            return new CommentListVm();
         }
     }
 }

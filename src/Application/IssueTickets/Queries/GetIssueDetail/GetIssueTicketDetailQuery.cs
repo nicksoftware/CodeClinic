@@ -4,7 +4,7 @@ using CodeClinic.Application.Common.Exceptions;
 using CodeClinic.Application.Common.Interfaces;
 using CodeClinic.Application.Issues.Queries.GetIssueList;
 using CodeClinic.Application.IssueTickets.Queries.GetIssueDetail;
-using CodeClinic.Application.Reviews.Query.GetReviewList;
+using CodeClinic.Application.Comments.Query.GetCommentList;
 using CodeClinic.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -38,11 +38,11 @@ namespace CodeClinic.Application.IssueItems.Queries.GetIssueDetail
 
             if(viewModel == null) throw new NotFoundException(nameof(IssueTicket), request.Id);
             
-            var reviews = await _context.Reviews
-                .ProjectTo<ReviewDto>(_mapper.ConfigurationProvider)
+            var Comments = await _context.Comments
+                .ProjectTo<CommentDto>(_mapper.ConfigurationProvider)
                 .Where(x => x.IssueTicketId == request.Id).ToListAsync(cancellationToken);
 
-            viewModel.Reviews = reviews;
+            viewModel.Comments = Comments;
             return viewModel;
         }
     }

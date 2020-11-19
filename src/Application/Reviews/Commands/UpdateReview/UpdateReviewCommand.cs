@@ -9,30 +9,30 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CodeClinic.Application.Reviews.Commands.UpdateReview
+namespace CodeClinic.Application.Comments.Commands.UpdateComment
 {
-    public class UpdateReviewCommand : IRequest
+    public class UpdateCommentCommand : IRequest
     {
         public int IssueTicketId { get; set; }
-        public int ReviewId { get; set; }
+        public int CommentId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
     }
-    public class UpdateReviewCommandHandler : ReviewCommandBaseHandler, IRequestHandler<UpdateReviewCommand>
+    public class UpdateCommentCommandHandler : CommentCommandBaseHandler, IRequestHandler<UpdateCommentCommand>
     {
-        public UpdateReviewCommandHandler(IApplicationDbContext context) : base(context) { }
+        public UpdateCommentCommandHandler(IApplicationDbContext context) : base(context) { }
 
-        public async Task<Unit> Handle(UpdateReviewCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(UpdateCommentCommand request, CancellationToken cancellationToken)
         {
 
-            Review entity = await _context.Reviews.FindAsync(request.ReviewId);
+            Comment entity = await _context.Comments.FindAsync(request.CommentId);
 
-            if (entity == null) throw new NotFoundException(nameof(Review), request.ReviewId);
+            if (entity == null) throw new NotFoundException(nameof(Comment), request.CommentId);
 
             entity.Title = request.Title;
             entity.Description = request.Description;
 
-            _context.Reviews.Update(entity);
+            _context.Comments.Update(entity);
             await _context.SaveChangesAsync(cancellationToken);
 
             return Unit.Value;

@@ -8,27 +8,27 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CodeClinic.Application.Reviews.Commands.DeleteReview
+namespace CodeClinic.Application.Comments.Commands.DeleteComment
 {
-    public class DeleteReviewCommand : IRequest
+    public class DeleteCommentCommand : IRequest
     {
         public int IssueTicketId { get; set; }
 
         public int Id { get; set; }
     }
 
-    public class DeleteReviewCommandHandler : ReviewCommandBaseHandler, IRequestHandler<DeleteReviewCommand>
+    public class DeleteCommentCommandHandler : CommentCommandBaseHandler, IRequestHandler<DeleteCommentCommand>
     {
-        public DeleteReviewCommandHandler(IApplicationDbContext context) : base(context) { }
+        public DeleteCommentCommandHandler(IApplicationDbContext context) : base(context) { }
 
 
-        public async Task<Unit> Handle(DeleteReviewCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(DeleteCommentCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _context.Reviews.FindAsync(request.Id);
+            var entity = await _context.Comments.FindAsync(request.Id);
 
-            if (entity == null) throw new NotFoundException(nameof(Review), request.Id);
+            if (entity == null) throw new NotFoundException(nameof(Comment), request.Id);
 
-            _context.Reviews.Remove(entity);
+            _context.Comments.Remove(entity);
 
             await _context.SaveChangesAsync(cancellationToken);
 
