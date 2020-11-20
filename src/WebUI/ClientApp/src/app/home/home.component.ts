@@ -1,28 +1,23 @@
 
-import { Component, TemplateRef } from '@angular/core';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { IIssueTicketDto, IssueTicketDto, IssueTicketListVm, IssueTicketsClient, ProgressStatus } from '../CodeClinic-api';
-
+import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { AuthorizeService } from '../../api-authorization/authorize.service';
+import { map } from 'rxjs/operators';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
+  styleUrls: ['./home.component.css']
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
 
-  modalRef : BsModalRef
-
-  issueTicketsListvm: IssueTicketListVm;
-  issuesTicketList: IIssueTicketDto[];
-
-  constructor(private client: IssueTicketsClient, private modalService :BsModalService ) {
-    
-    this.client.getAll().subscribe(result => {
-      this.issuesTicketList = result.issues;
-     
-    }, error => console.error(error));
-
+  public isAuthenticated: Observable<boolean>;
+  public userName: Observable<string>;
+  
+  constructor(private authorizeService: AuthorizeService) { }
+  
+  ngOnInit() {
+    this.isAuthenticated = this.authorizeService.isAuthenticated();
+    this.userName = this.authorizeService.getUser().pipe(map(u => u && u.name));
   }
-
-
 }
 
