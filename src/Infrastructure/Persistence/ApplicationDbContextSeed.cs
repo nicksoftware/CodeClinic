@@ -12,7 +12,7 @@ namespace CodeClinic.Infrastructure.Persistence
     public static class ApplicationDbContextSeed
     {
         private static ApplicationUser _defaultUser;
-        
+
         public static async Task SeedDefaultUserAsync(UserManager<ApplicationUser> userManager)
         {
             _defaultUser = new ApplicationUser { UserName = "admin@admin.com", Email = "admin@admin.com" };
@@ -39,8 +39,8 @@ namespace CodeClinic.Infrastructure.Persistence
 
                 context.Categories.AddRange(categories);
 
-                 await  context.SaveChangesAsync();
-                
+                await context.SaveChangesAsync();
+
                 context.IssueTickets.AddRange(
                     new List<IssueTicket>
                     {
@@ -51,18 +51,7 @@ namespace CodeClinic.Infrastructure.Persistence
                             CategoryId = 1,
                             Status = Domain.Enums.ProgressStatus.InDiscussion,
                             Body = "I was Updating to the latest version of entity framework and everything went west of westeros",
-                            Comments = new List<Comment>
-                            {
-                                new Comment
-                                {
-                                    Created = DateTime.Now,
-                                    CreatedBy = _defaultUser.Id,
-                                    Title="Here  is how you should debug your app",
-                                    Description ="If you were updating to 6.4 which is the latest current version at the time this was posted ,you should be aware that certain implementations where changed you I will show you where to " +
-                                            "change on your previous version else if this  doesn help open the docs,should refer to the docs",
-                                     
-                                }
-                            }
+
                         },
 
                         new IssueTicket{
@@ -71,17 +60,6 @@ namespace CodeClinic.Infrastructure.Persistence
                             Title = "My Xamarin 📱 Application Has a Bug ,I cant Fix",
                             CategoryId = 2,
                             Body = "I  cant seem to create a new page ",
-                            Comments = new List<Comment>
-                            {
-                                new Comment
-                                {   
-                                    Created = DateTime.Now,
-                                    CreatedBy = _defaultUser.Id,
-                                    Title = "Provide more details",
-                                    Description="Can you describe the problem you facing "
-
-                                }
-                            }
                         },
                         new IssueTicket{
                             Created = DateTime.Now,
@@ -101,6 +79,50 @@ namespace CodeClinic.Infrastructure.Persistence
                     }
                     );
 
+                var comments = new List<Comment>
+                {
+                    new Comment
+                    {
+                        IssueTicketId = 3,
+                        Created = DateTime.Now,
+                        CreatedBy = _defaultUser.Id,
+                        Title = "Provide more details",
+                        Description="Can you describe the problem you facing "
+
+                    },
+                    new Comment
+                    {
+                        IssueTicketId = 2,
+                        Created = DateTime.Now,
+                        CreatedBy = _defaultUser.Id,
+                        Title="Here  is how you should debug your app",
+                        Description ="If you were updating to 6.4 which is the latest current version at the time this was posted ,you should be aware that certain implementations where changed you I will show you where to " +
+                                "change on your previous version else if this  doesn help open the docs,should refer to the docs",
+
+                    },
+                    new Comment
+                    {
+                        IssueTicketId = 3,
+                        Created = DateTime.Now,
+                        CreatedBy = _defaultUser.Id,
+                        Title="Here  is how you should debug your app",
+                        Description ="If you were updating to 6.4 which is the latest current version at the time this was posted ,you should be aware that certain implementations where changed you I will show you where to " +
+                                "change on your previous version else if this  doesn help open the docs,should refer to the docs",
+
+                    },
+                    new Comment
+                    {
+                        IssueTicketId =1,
+                        Created = DateTime.Now,
+                        CreatedBy = _defaultUser.Id,
+                        Title="Here  is how you should debug your app",
+                        Description ="If you were updating to 6.4 which is the latest current version at the time this was posted ,you should be aware that certain implementations where changed you I will show you where to " +
+                                "change on your previous version else if this  doesn help open the docs,should refer to the docs",
+
+                    }
+                };
+
+                context.Comments.AddRange(comments);
                 await context.SaveChangesAsync();
             }
         }

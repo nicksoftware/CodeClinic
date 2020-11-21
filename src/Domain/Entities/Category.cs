@@ -6,7 +6,7 @@ using System.Text;
 
 namespace CodeClinic.Domain.Entities
 {
-   public class Category : AuditableEntity
+   public class Category : BaseEntity
     {
         public Category()
         {
