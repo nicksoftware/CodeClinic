@@ -10,8 +10,6 @@ namespace CodeClinic.Domain.Entities
 
         public int IssueTicketId { get; set; }
 
-        public int Likes { get; set; }
-
         public int DisLikes { get; set; }
 
         public string Title { get; set; }
@@ -19,5 +17,8 @@ namespace CodeClinic.Domain.Entities
         public string Description { get; set; }
 
         public IssueTicket IssueTicket { get;private set; }
+
+        public List<Like> Likes { get; private  set; } = new List<Like>();
+
     }
 }

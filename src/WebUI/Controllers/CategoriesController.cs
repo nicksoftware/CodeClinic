@@ -1,4 +1,6 @@
-﻿using CodeClinic.Application.Categories.Commands.CreateCategory;
+﻿using System.Net.Http.Headers;
+using System.Net;
+using CodeClinic.Application.Categories.Commands.CreateCategory;
 using CodeClinic.Application.Categories.Commands.DeleteCategory;
 using CodeClinic.Application.Categories.Commands.UpdateCategory;
 using CodeClinic.Application.Categories.Queries.GetCategory;
@@ -26,13 +28,12 @@ namespace CodeClinic.WebUI.Controllers
         {
             return await Mediator.Send(new GetCategoryDetailQuery { Id = id });
         }
-
-
+        
         [Authorize]
         [HttpPost]
         public async Task<ActionResult<int>> Create(CreateCategoryCommand command)
-        {
-            return await Mediator.Send(command); 
+        {            
+            return  await Mediator.Send(command); 
         }
          
         [HttpPut("{id}")]
@@ -42,7 +43,6 @@ namespace CodeClinic.WebUI.Controllers
 
             return NoContent();
         }
-
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)

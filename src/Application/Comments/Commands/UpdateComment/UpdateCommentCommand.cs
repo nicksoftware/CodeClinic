@@ -1,11 +1,7 @@
 ﻿using CodeClinic.Application.Common.Exceptions;
 using CodeClinic.Application.Common.Interfaces;
 using CodeClinic.Domain.Entities;
-using FluentValidation;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,9 +20,8 @@ namespace CodeClinic.Application.Comments.Commands.UpdateComment
 
         public async Task<Unit> Handle(UpdateCommentCommand request, CancellationToken cancellationToken)
         {
-
-            Comment entity = await _context.Comments.FindAsync(request.CommentId);
-
+            Comment entity = await _context.Comments.FindAsync(request.CommentId,  cancellationToken);
+            
             if (entity == null) throw new NotFoundException(nameof(Comment), request.CommentId);
 
             entity.Title = request.Title;

@@ -1,15 +1,15 @@
-﻿using System.Security.Cryptography;
-using CodeClinic.Application.Comments.Query.GetCommentList;
-using Microsoft.AspNetCore.Http;
+﻿using CodeClinic.Application.Comments.Query.GetCommentList;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using CodeClinic.Application.Comments.Commands.CreateComment;
 using CodeClinic.Application.Comments.Commands.UpdateComment;
 using CodeClinic.Application.Comments.Commands.DeleteComment;
 using CodeClinic.Application.Comments.Query.GetCommentDetails;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CodeClinic.WebUI.Controllers
 {
+    [Authorize]
     [Route("api/issueTickets/{issueTicketId}/[controller]")]
     public class CommentsController : ApiController
     {

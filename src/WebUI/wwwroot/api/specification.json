@@ -831,6 +831,14 @@
             "type": "string",
             "nullable": true
           },
+          "likes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "disLikes": {
+            "type": "integer",
+            "format": "int32"
+          },
           "description": {
             "type": "string",
             "nullable": true
