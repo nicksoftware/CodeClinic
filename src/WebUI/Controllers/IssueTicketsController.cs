@@ -13,7 +13,7 @@ using CodeClinic.Application.IssueTickets.Queries.GetIssueDetail;
 
 namespace CodeClinic.WebUI.Controllers
 {
-    [Authorize]
+    
     public class IssueTicketsController : ApiController
     {
         [HttpGet]
@@ -23,7 +23,7 @@ namespace CodeClinic.WebUI.Controllers
         }
 
 
-
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<IssueTicketDetailVm>> GetIssueTicketById(int id)
         {
@@ -31,13 +31,13 @@ namespace CodeClinic.WebUI.Controllers
             return await Mediator.Send(new GetIssueTicketDetailQuery { Id = id });
         }
 
-
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<int>> Create(CreateIssueTicketCommand command)
         {
             return await Mediator.Send(command);
         }
-
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<ActionResult> Update(int id, UpdateIssueTicketCommand command)
         {
@@ -48,6 +48,7 @@ namespace CodeClinic.WebUI.Controllers
 
             return NoContent();
         }
+        [Authorize]
         [HttpPut("[action]")]
         public async Task<ActionResult> UpdateDetails(int id, UpdateIssueTicketDetailsCommand command)
         {
@@ -61,6 +62,7 @@ namespace CodeClinic.WebUI.Controllers
             return NoContent();
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
