@@ -23,12 +23,12 @@ namespace CodeClinic.Application.Comments.Query.GetCommentList
         public int IssueTicketId { get; private set; }
     }
 
-    public class GetDiagnosisListQueryHandler : IRequestHandler<GetCommentListQuery, CommentListVm>
+    public class GetCommentsListQueryHandler : IRequestHandler<GetCommentListQuery, CommentListVm>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
 
-        public GetDiagnosisListQueryHandler(IApplicationDbContext context, IMapper mapper)
+        public GetCommentsListQueryHandler(IApplicationDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
@@ -36,23 +36,18 @@ namespace CodeClinic.Application.Comments.Query.GetCommentList
 
         public async Task<CommentListVm> Handle(GetCommentListQuery request, CancellationToken cancellationToken)
         {
-            var diagnoses = await _context.Comments.Where(it => it.IssueTicketId == request.IssueTicketId)
+            var comments = await _context.Comments
+                .Where(it => it.IssueTicketId == request.IssueTicketId)
+                .Include(u=> u.Likes)
         .ProjectTo<CommentDto>(_mapper.ConfigurationProvider)
         .ToListAsync(cancellationToken);
 
-
-            if (diagnoses == null)
+            if (comments == null)
                 throw new NotFoundException(nameof(Comment), request.IssueTicketId);
             
-            CommentListVm vm = new CommentListVm
-            {
-                Items = diagnoses
-            };
+            CommentListVm vm = new CommentListVm { Items = comments };
 
-            if (diagnoses != null)
-            {
-                return vm;
-            }
+            if (comments != null) return vm;
 
             return new CommentListVm();
         }

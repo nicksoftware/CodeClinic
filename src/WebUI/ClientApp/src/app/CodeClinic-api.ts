@@ -1367,6 +1367,8 @@ export class UpdateCommentCommand implements IUpdateCommentCommand {
     issueTicketId?: number;
     commentId?: number;
     title?: string | undefined;
+    likes?: number;
+    disLikes?: number;
     description?: string | undefined;
 
     constructor(data?: IUpdateCommentCommand) {
@@ -1383,6 +1385,8 @@ export class UpdateCommentCommand implements IUpdateCommentCommand {
             this.issueTicketId = _data["issueTicketId"];
             this.commentId = _data["commentId"];
             this.title = _data["title"];
+            this.likes = _data["likes"];
+            this.disLikes = _data["disLikes"];
             this.description = _data["description"];
         }
     }
@@ -1399,6 +1403,8 @@ export class UpdateCommentCommand implements IUpdateCommentCommand {
         data["issueTicketId"] = this.issueTicketId;
         data["commentId"] = this.commentId;
         data["title"] = this.title;
+        data["likes"] = this.likes;
+        data["disLikes"] = this.disLikes;
         data["description"] = this.description;
         return data; 
     }
@@ -1408,6 +1414,8 @@ export interface IUpdateCommentCommand {
     issueTicketId?: number;
     commentId?: number;
     title?: string | undefined;
+    likes?: number;
+    disLikes?: number;
     description?: string | undefined;
 }
 

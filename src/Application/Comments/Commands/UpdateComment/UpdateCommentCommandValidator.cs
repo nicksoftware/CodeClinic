@@ -13,9 +13,9 @@ namespace CodeClinic.Application.Comments.Commands.UpdateComment
                 .NotNull();
 
             RuleFor(t => t.IssueTicketId)
-                .NotEmpty().NotNull()
-                .WithErrorCode("400")
-                .WithMessage("Issue Ticket Id is Required");
+            .NotEmpty()
+            .NotNull()
+            .WithErrorCode("400").WithMessage("Issue Ticket Id is Required");
 
             RuleFor(t => t.Title)
                 .NotEmpty()

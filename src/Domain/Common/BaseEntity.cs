@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeClinic.Domain.Entities
+namespace CodeClinic.Domain.Common
 {
    public class BaseEntity : AuditableEntity
     {

@@ -24,6 +24,9 @@ namespace CodeClinic.Infrastructure.Persistence.Configurations
                 .HasForeignKey(k => k.IssueTicketId)
                 .IsRequired();
 
+            builder.HasMany(x => x.Likes)
+                .WithOne(d=> d.Comment).OnDelete(DeleteBehavior.Cascade);
+
         }
     }
 }

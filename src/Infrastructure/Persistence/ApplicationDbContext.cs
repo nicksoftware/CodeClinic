@@ -33,6 +33,7 @@ namespace CodeClinic.Infrastructure.Persistence
         public DbSet<IssueTicket> IssueTickets { get  ; set ; }
         public DbSet<Category> Categories {get; set ; }
         public DbSet<Comment> Comments { get ; set; }
+        public DbSet<Like> Likes { get ; set ; }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
