@@ -5,15 +5,19 @@ using System.Text;
 
 namespace CodeClinic.Domain.Entities
 {
-   public class Comment :AuditableEntity
+   public class Comment : BaseEntity
     {
 
         public int IssueTicketId { get; set; }
+
+        public int Likes { get; set; }
+
+        public int DisLikes { get; set; }
 
         public string Title { get; set; }
 
         public string Description { get; set; }
 
-        public IssueTicket IssueTicket { get; set; }
+        public IssueTicket IssueTicket { get;private set; }
     }
 }
