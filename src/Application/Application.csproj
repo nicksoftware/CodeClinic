@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <Folder Include="Common\Mappings\" />
-    <Folder Include="Likes\Queries\" />
   </ItemGroup>
 
 </Project>

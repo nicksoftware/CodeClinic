@@ -1,5 +1,5 @@
-﻿{
-  "x-generator": "NSwag v13.3.0.0 (NJsonSchema v10.1.11.0 (Newtonsoft.Json v12.0.0.0))",
+{
+  "x-generator": "NSwag v13.9.4.0 (NJsonSchema v10.3.1.0 (Newtonsoft.Json v12.0.0.0))",
   "openapi": "3.0.0",
   "info": {
     "title": "Code Clinic API",
@@ -196,7 +196,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -239,7 +244,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
       }
     },
     "/api/issueTickets/{issueTicketId}/Comments/{id}": {
@@ -281,7 +291,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -333,7 +348,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -374,7 +394,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
       }
     },
     "/api/IssueTickets": {
@@ -582,6 +607,159 @@
           },
           "required": true,
           "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/likes/{CommentId}/Likes": {
+      "post": {
+        "tags": [
+          "Likes"
+        ],
+        "operationId": "Likes_CreateLike",
+        "parameters": [
+          {
+            "name": "commentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateLikeCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Likes"
+        ],
+        "operationId": "Likes_UpdateLike",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "CommentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 3
+          }
+        ],
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLikeCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Likes"
+        ],
+        "operationId": "Likes_DeleteLike",
+        "parameters": [
+          {
+            "name": "CommentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteLikeCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
         },
         "responses": {
           "200": {
@@ -831,14 +1009,6 @@
             "type": "string",
             "nullable": true
           },
-          "likes": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "disLikes": {
-            "type": "integer",
-            "format": "int32"
-          },
           "description": {
             "type": "string",
             "nullable": true
@@ -995,6 +1165,36 @@
           "body": {
             "type": "string",
             "nullable": true
+          }
+        }
+      },
+      "CreateLikeCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "commentId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "UpdateLikeCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "likeId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "DeleteLikeCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "likeId": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       }
