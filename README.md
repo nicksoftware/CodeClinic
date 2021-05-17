@@ -3,6 +3,7 @@
 [![Twitter Follow](https://img.shields.io/twitter/follow/hnicolus.svg?style=social&label=Follow)](https://twitter.com/hnicolus)
 
 <br/>
+This project is just for learning purposes
 Coding forum where developers can come for code assistance  with Angular and ASP.NET Core following the principles of Clean Architecture.
 
 
