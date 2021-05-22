@@ -3,10 +3,8 @@
 [![Twitter Follow](https://img.shields.io/twitter/follow/hnicolus.svg?style=social&label=Follow)](https://twitter.com/hnicolus)
 
 <br/>
-This project is just for learning purposes
-Coding forum where developers can come for code assistance  with Angular and ASP.NET Core following the principles of Clean Architecture.
-
-
+This project is just for  learning purposes to help one understand more about Clean architecture and Command Query Responsibility Reperation (CRQS).
+It is a simple Coding forum built with Angular and ASP.NET Core following the principles of Clean Architecture.
 
 ## Technologies
 
@@ -76,8 +74,5 @@ This layer is a single page application based on Angular 9 and ASP.NET Core 3.1.
 - [x] esearch
 - [x] Setup
 - [x] Base Entities
-- [ ] Complete business Logic
-- [ ] minimum UI
-- [ ] MVP
-- [ ] Machine Learning
+
 ## License
