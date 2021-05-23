@@ -3,7 +3,7 @@
 [![Twitter Follow](https://img.shields.io/twitter/follow/hnicolus.svg?style=social&label=Follow)](https://twitter.com/hnicolus)
 
 <br/>
-This project is just for  learning purposes to help one understand more about Clean architecture and Command Query Responsibility Reperation (CRQS).
+This project is just for  learning purposes to help one understand more about Clean architecture and Command Query Responsibility Segregation (CQRS).
 It is a simple Coding forum built with Angular and ASP.NET Core following the principles of Clean Architecture.
 
 ## Technologies
